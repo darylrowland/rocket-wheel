@@ -5,6 +5,9 @@ angular.module('starter.controllers', [])
 
 .controller('MainController', function($scope, $rootScope, $stateParams, $interval, $ionicGesture, $ionicBackdrop, $timeout, $http, $ionicLoading) {
 
+    var VEL_THROW = 0.1;
+    $scope.debug = {};
+
     $scope.navBubbles = [
         {id: "houseMove", title: "Summary", colour: "RGBA(57, 161, 223, 1)", icon: "ion-ios7-bookmarks-outline"},
         {id: "houseMove", title: "House", colour: "RGBA(91, 152, 23, 1)", icon: "ion-home"},
@@ -84,6 +87,7 @@ angular.module('starter.controllers', [])
             $scope.navBubbles[i].left = x + "px";
             $scope.navBubbles[i].top = y + "px";
             $scope.navBubbles[i].angle = angleInDeg;
+            console.log( 'distributeBubbles', angleInDeg );
 
             angle += step;
         }
@@ -92,7 +96,7 @@ angular.module('starter.controllers', [])
     }
 
     $scope.distributeBubbles($scope.dialWidth);
-    $scope.currentRotation = 270;
+    $scope.currentRotation = 0;
 
     var allBubbleElements = document.getElementsByClassName("bubble-icon");
     console.log(allBubbleElements);
@@ -193,7 +197,43 @@ angular.module('starter.controllers', [])
     //var world = anima.world();
     //var dialAnimator = world.add(document.getElementById("dialHolder"))
 
+
+    var RADIUS_DIAL = $scope.dialWidth / 2;
+
+    function getDeltaAngleFromDeltaX(deltaX) {
+        // sinθ = deltaX / RADIUS_DIAL
+
+        var deltaAngleInRad;
+        var absDeltaX = Math.abs(deltaX);
+
+        if ( absDeltaX < RADIUS_DIAL )   // 0 to 90 degrees
+            deltaAngleInRad = Math.asin( absDeltaX / RADIUS_DIAL );   // In degrees
+        else if ( absDeltaX == RADIUS_DIAL )   // 90 degrees
+            deltaAngleInRad = Math.PI/2;
+        else // 90 to 180 degrees
+            return Math.PI/2 + Math.asin( (absDeltaX-RADIUS_DIAL) / RADIUS_DIAL );
+
+        if ( deltaX >= 0 )
+            return deltaAngleInRad * 360 / (2*Math.PI)
+        else
+            return -deltaAngleInRad * 360 / (2*Math.PI)
+        
+    }
+
     $scope.rotateAmount = 0;
+
+
+    function applyRotatation(rotationFromInitial) {
+        // Rotate wheel
+        dialElem.style.webkitTransform = "translate3d(0px, 0px, 0px) rotate(" + rotationFromInitial + "deg)";        
+
+        // Compenstate for cascade rotations in bubbles
+        /*
+        for (var i = 0; i < allBubbleElements.length; i++) {
+            allBubbleElements[i].style.webkitTransform = "translate3d(0px, 0px, 0px) rotate(" + (-$scope.thisRotation) + "deg)";
+        }
+        */
+    }
 
     $scope.smallDragEvent = function(evt) {
         if ($scope.lastDragDirection && $scope.lastDragDistance) {
@@ -203,59 +243,40 @@ angular.module('starter.controllers', [])
             $scope.lastDragDistance = evt.gesture.distance;
         }
 
-        $scope.rotateAmount = $scope.rotateAmount + (Math.abs(evt.gesture.deltaX) / 70);
+        //$scope.rotateAmount = $scope.rotateAmount + (Math.abs(evt.gesture.deltaX) / 70);
+        $scope.deltaAng = getDeltaAngleFromDeltaX( evt.gesture.deltaX );
         //$scope.rotateAmount = 2;
 
-        console.log($scope.rotateAmount);
+        //console.log($scope.rotateAmount);
+        $scope.debug.deltaX = evt.gesture.deltaX;
+        $scope.debug.velocX = evt.gesture.velocityX;
+        $scope.debug.deltaAng = $scope.deltaAng;
+        $scope.debug.currentRotation = $scope.currentRotation;
+        $scope.debug.thisRotation = $scope.thisRotation;
+        $scope.$apply();
 
-        if ($scope.rotateAmount >= 1) {
+
+        //if ($scope.rotateAmount >= 0) {
+        if (true) {
             //console.log("rotate amount", rotateAmount, "delta", evt.gesture.velocityX);
 
-            if (evt.gesture.direction == "left") {
-                //dialElem.webkitTransform = "rotate()";
-                $scope.currentRotation = $scope.currentRotation - $scope.rotateAmount;
+            $scope.thisRotation = $scope.currentRotation + $scope.deltaAng;
 
-                //dialElem.style.webkitTransform = "rotate(" + $scope.currentRotation + "deg)";
-                //dialElem.style['-webkit-transition-duration'] = '0.05s';
-                //dialElem.style['-webkit-transition-property'] = 'all';
-
-
-
-
-            } else if (evt.gesture.direction == "right") {
-                //dialElem.webkitTransform = "rotate()";
-                $scope.currentRotation = $scope.currentRotation + $scope.rotateAmount;
-
-
-//                dialElem.style.webkitTransform = "rotate(" + $scope.currentRotation + "deg)";
-//                dialElem.style['-webkit-transition-duration'] = '0.05s';
-//                dialElem.style['-webkit-transition-property'] = 'all';
-            }
 
             var transitionTime = 0.009 * evt.gesture.velocity;
 
+            applyRotatation( $scope.thisRotation );
 
 
-
-
-
-            dialElem.style.webkitTransform = "translate3d(0px, 0px, 0px) rotate(" + $scope.currentRotation + "deg)";
-            dialElem.style['-webkit-transition-duration'] = transitionTime + 's';
-            dialElem.style['-webkit-transition-property'] = 'all';
-
-
-            for (var i = 0; i < allBubbleElements.length; i++) {
-                allBubbleElements[i].style.webkitTransform = "translate3d(0px, 0px, 0px) rotate(" + (-$scope.currentRotation) + "deg)";
-                allBubbleElements[i].style['-webkit-transition-duration'] = transitionTime + 's';
-                allBubbleElements[i].style['-webkit-transition-property'] = 'all';
-            }
+            /*
+            // SELECT CLOSEST BUBBLE
 
             var selectedBubble = -1;
             var selectedIndex = -1;
             var selectedBubbleDistance = 999999;
 
             for (var i = 0; i < $scope.navBubbles.length; i++) {
-                console.log(Math.abs(($scope.currentRotation % 360) - $scope.navBubbles[i].angle));
+                //console.log(Math.abs(($scope.currentRotation % 360) - $scope.navBubbles[i].angle));
                 if (Math.abs(($scope.currentRotation % 360) - $scope.navBubbles[i].angle) < selectedBubbleDistance) {
                     selectedBubble = $scope.navBubbles[i];
                     selectedIndex = i;
@@ -263,12 +284,13 @@ angular.module('starter.controllers', [])
                 }
             }
 
-            console.log("selected index", selectedIndex);
+            //console.log("selected index", selectedIndex);
 
             $scope.highlightedIndex = selectedIndex;
             $scope.$apply();
+            */
 
-
+            $scope.$apply();
 
             $scope.rotateAmount = 0;
         }
@@ -283,11 +305,16 @@ angular.module('starter.controllers', [])
         //console.log(evt.gesture);
         $scope.lastDragDirection = null;
         $scope.lastDragDistance = null;
+
+        $scope.currentRotation = $scope.currentRotation + $scope.deltaAng;
     }
 
 
     $scope.dragStartEvent = function(evt) {
         evt.preventDefault();
+
+        console.log(evt.gesture.deltaX);
+        console.log(evt.gesture.velocityX);
 
         if (evt.gesture.deltaX < 0) {
             $scope.rotateBubbles(-1);
