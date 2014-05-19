@@ -1,0 +1,22 @@
+2014-05-13 18:13:32.177 HelloCordova[18971:70b] Multi-tasking -> Device: YES, App: YES
+2014-05-13 18:13:32.217 HelloCordova[18971:70b] Unlimited access to network resources
+2014-05-13 18:13:32.428 HelloCordova[18971:70b] CDVPlugin class CDVStatusBar (pluginName: statusbar) does not exist.
+2014-05-13 18:13:32.428 HelloCordova[18971:70b] [CDVTimer][statusbar] 0.451982ms
+2014-05-13 18:13:32.428 HelloCordova[18971:70b] [CDVTimer][TotalPluginStartup] 0.871003ms
+2014-05-13 18:13:32.600 HelloCordova[18971:70b] Resetting plugins due to page load.
+2014-05-13 18:13:32.921 HelloCordova[18971:70b] Finished load of: file:///Users/Daryl/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/A1F78340-8FCB-47AB-96A3-B9B2BB6C9451/HelloCordova.app/www/index.html#/app/main
+2014-05-17 13:30:10.500 Living[39309:70b] Multi-tasking -> Device: YES, App: YES
+2014-05-17 13:30:10.531 Living[39309:70b] Unlimited access to network resources
+2014-05-17 13:30:10.580 Living[39309:70b] Fix applied for database locations?: YES
+2014-05-17 13:30:10.733 Living[39309:70b] CDVPlugin class CDVStatusBar (pluginName: statusbar) does not exist.
+2014-05-17 13:30:10.733 Living[39309:70b] [CDVTimer][statusbar] 0.484049ms
+2014-05-17 13:30:10.734 Living[39309:70b] [CDVTimer][TotalPluginStartup] 0.862002ms
+2014-05-17 13:30:10.871 Living[39309:70b] Resetting plugins due to page load.
+2014-05-17 13:30:11.095 Living[39309:70b] Finished load of: file:///Users/Daryl/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/7A9930FA-17DE-489E-8464-FB1A0BF7BDD4/Living.app/www/index.html#/app/main
+2014-05-17 13:31:19.055 Living[39553:70b] Multi-tasking -> Device: YES, App: YES
+2014-05-17 13:31:19.061 Living[39553:70b] Unlimited access to network resources
+2014-05-17 13:31:19.076 Living[39553:70b] CDVPlugin class CDVStatusBar (pluginName: statusbar) does not exist.
+2014-05-17 13:31:19.076 Living[39553:70b] [CDVTimer][statusbar] 0.244021ms
+2014-05-17 13:31:19.077 Living[39553:70b] [CDVTimer][TotalPluginStartup] 0.425994ms
+2014-05-17 13:31:19.143 Living[39553:70b] Resetting plugins due to page load.
+2014-05-17 13:31:19.316 Living[39553:70b] Finished load of: file:///Users/Daryl/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/7A9930FA-17DE-489E-8464-FB1A0BF7BDD4/Living.app/www/index.html#/app/main
