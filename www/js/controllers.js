@@ -83,6 +83,7 @@ angular.module('starter.controllers', [])
 
             $scope.navBubbles[i].left = x + "px";
             $scope.navBubbles[i].top = y + "px";
+            $scope.navBubbles[i].angle = angleInDeg;
 
             angle += step;
         }
@@ -213,7 +214,6 @@ angular.module('starter.controllers', [])
             if (evt.gesture.direction == "left") {
                 //dialElem.webkitTransform = "rotate()";
                 $scope.currentRotation = $scope.currentRotation - $scope.rotateAmount;
-                $scope.$apply();
 
                 //dialElem.style.webkitTransform = "rotate(" + $scope.currentRotation + "deg)";
                 //dialElem.style['-webkit-transition-duration'] = '0.05s';
@@ -225,7 +225,7 @@ angular.module('starter.controllers', [])
             } else if (evt.gesture.direction == "right") {
                 //dialElem.webkitTransform = "rotate()";
                 $scope.currentRotation = $scope.currentRotation + $scope.rotateAmount;
-                $scope.$apply();
+
 
 //                dialElem.style.webkitTransform = "rotate(" + $scope.currentRotation + "deg)";
 //                dialElem.style['-webkit-transition-duration'] = '0.05s';
@@ -249,6 +249,25 @@ angular.module('starter.controllers', [])
                 allBubbleElements[i].style['-webkit-transition-duration'] = transitionTime + 's';
                 allBubbleElements[i].style['-webkit-transition-property'] = 'all';
             }
+
+            var selectedBubble = -1;
+            var selectedIndex = -1;
+            var selectedBubbleDistance = 999999;
+
+            for (var i = 0; i < $scope.navBubbles.length; i++) {
+                console.log(Math.abs(($scope.currentRotation % 360) - $scope.navBubbles[i].angle));
+                if (Math.abs(($scope.currentRotation % 360) - $scope.navBubbles[i].angle) < selectedBubbleDistance) {
+                    selectedBubble = $scope.navBubbles[i];
+                    selectedIndex = i;
+                    selectedBubbleDistance = Math.abs(($scope.currentRotation % 360) - $scope.navBubbles[i].angle);
+                }
+            }
+
+            console.log("selected index", selectedIndex);
+
+            $scope.highlightedIndex = selectedIndex;
+            $scope.$apply();
+
 
 
             $scope.rotateAmount = 0;
