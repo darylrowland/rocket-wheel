@@ -177,14 +177,8 @@ angular.module('starter.controllers', [])
 
         var leftHandBubbleIndex = Math.floor( reverseRotation/stepAngleDegrees )
 
-        console.log(
-            Math.round(absoluteRotation), 
-            Math.round(reverseRotation),
-            leftHandBubbleIndex
-        );
-
         var leftHandBubbleAngle = leftHandBubbleIndex * stepAngleDegrees;
-        // Return left hand bubble if reverse rotation is less than midpoint to the righ
+        // Return left hand bubble if reverse rotation is less than midpoint to the right
         if ( reverseRotation < (leftHandBubbleAngle+stepAngleDegrees/2) ) {
             return leftHandBubbleIndex;
         // Otherwise return right hand bubble
@@ -195,7 +189,7 @@ angular.module('starter.controllers', [])
     }
 
     function getBubbleAngle(bubbleIndex) {
-
+        return bubbleIndex * $scope.stepAngleDegrees;
     }
 
 
@@ -261,7 +255,7 @@ angular.module('starter.controllers', [])
             $scope.lastDragDistance = null;
 
             currentRotation = thisRotation; 
-            snapToClosestBubble(currentRotation);          
+            snapToClosestNotch(currentRotation);          
         }        
     }
 
@@ -288,11 +282,11 @@ angular.module('starter.controllers', [])
         console.log(thisVelocityRotation);
 
         dialElem.style['-webkit-transition-duration'] = totalDuration + 's';
-        dialElem.style.webkitTransform = "rotate(" + parseInt(thisVelocityRotation) + "deg)";
+        dialElem.style.webkitTransform = "translate3d(0, 0, 0) rotate(" + parseInt(thisVelocityRotation) + "deg)";
         // Compenstate for CSS cascade rotations in bubbles
         for (var i = 0; i < allBubbleElements.length; i++) {
             allBubbleElements[i].style['-webkit-transition-duration'] = totalDuration + 's';
-            allBubbleElements[i].style.webkitTransform = "rotate(" + parseInt( -(thisVelocityRotation) ) + "deg)";
+            allBubbleElements[i].style.webkitTransform = "translate3d(0, 0, 0) rotate(" + parseInt( -(thisVelocityRotation) ) + "deg)";
         }
         //thisRotation = thisVelocityRotation;
         currentRotation = thisVelocityRotation; 
@@ -303,14 +297,48 @@ angular.module('starter.controllers', [])
     }
 
     function highlightClosestBubble(absoluteRotation) {
-        console.clear();
-        console.log( absoluteRotation, getTopBubbleIndex(absoluteRotation) );
         $scope.highlightedIndex = getTopBubbleIndex(absoluteRotation);
         $scope.$apply();
     }
 
-    function snapToClosestBubble(absoluteRotation) {
-        
+    function snapToClosestNotch(absoluteRotation) {
+        var closestNotchAngle = getClosestNotchAngle(absoluteRotation);
+
+        dialElem.style['-webkit-transition-duration'] = '0.1s';
+        dialElem.style.webkitTransform = "translate3d(0, 0, 0) rotate(" + parseInt(closestNotchAngle) + "deg)";
+
+        for (var i = 0; i < allBubbleElements.length; i++) {
+            allBubbleElements[i].style['-webkit-transition-duration'] = '0.1s';
+            allBubbleElements[i].style.webkitTransform = "translate3d(0, 0, 0) rotate(" + parseInt( -(closestNotchAngle) ) + "deg)";
+        }
+
+        currentRotation = closestNotchAngle;
+
+
+    }
+
+    function getClosestNotchAngle(absoluteRotation) {
+
+        var stepAngleDegrees = $scope.stepAngleDegrees;
+        var bubbleCount = $scope.navBubbles.length;
+
+        // NB: This is not bubble index (bubble index can be deduced from notch index by reversing rotation and using modulus, etc)
+        var leftHandNotchIndex = Math.floor( absoluteRotation/stepAngleDegrees )
+        var leftHandNotchAngle = leftHandNotchIndex * stepAngleDegrees;
+
+        // Return left hand notch angle if absolute rotation is less than midpoint to the right
+        if ( absoluteRotation < (leftHandNotchAngle+stepAngleDegrees/2) ) {
+            return leftHandNotchAngle;
+        // Otherwise return right hand notch angle
+        } else {
+            return (leftHandNotchAngle + stepAngleDegrees) // NB: No wrap around here to make animations work properly
+        }
+
+
+        var topBubbleIndex = getTopBubbleIndex(absoluteRotation);
+        var topBubbleAngle = getBubbleAngle(topBubbleIndex);
+
+
     }
 
 
