@@ -21,6 +21,7 @@
             <div class="content-bg" scroll="false" id="swipeArea" >
                     <div id="dialHolder" class="holder" style="width: {{dialWidth}}px; height: {{dialWidth}}px; ">
                         <div class="nav-ball" ng-class="{'highlighted-bubble': $index == highlightedIndex}" ng-repeat="bubble in navBubbles" style="background-color: {{bubble.colour}}; top: {{bubble.top}}; left: {{bubble.left}};">
+                            <!--<span>{{$index}}</span>-->
                             <i class="{{bubble.icon}} bubble-icon reverse-rotate"></i>
                         </div>
                     </div>

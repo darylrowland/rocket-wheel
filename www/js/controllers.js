@@ -66,27 +66,18 @@ angular.module('starter.controllers', [])
             var yOffset = 0;
             var angleInDeg = angle * (180 / Math.PI);
 
-            if (angleInDeg >= 0 && angleInDeg < 90) {
-                xOffset = -$scope.widthOffset;
-                yOffset = -$scope.widthOffset;
-            } else if (angleInDeg >= 90 && angleInDeg < 180) {
-                xOffset = -$scope.widthOffset;
-                yOffset = -$scope.widthOffset;
-            } else if (angleInDeg >= 180 && angleInDeg < 270) {
-                xOffset = -$scope.widthOffset;
-                yOffset = -$scope.widthOffset;
-            } else if (angleInDeg >= 270 && angleInDeg < 360) {
-                xOffset = -$scope.widthOffset;
-                yOffset = -$scope.widthOffset;
-            }
+            // wheelAngle positions first bubble at top of wheel 
+            var wheelAngle = ( angle - (Math.PI/2) ) % (2*Math.PI);
+            //var wheelAngle = angle;
 
-            var x = Math.round(width/2 + radius * Math.cos(angle) + xOffset);
-            var y = Math.round(height/2 + radius * Math.sin(angle) + yOffset);
-
+            var x = Math.round(width/2 + radius * Math.cos(wheelAngle) -$scope.widthOffset);
+            var y = Math.round(height/2 + radius * Math.sin(wheelAngle) -$scope.widthOffset);
 
             $scope.navBubbles[i].left = x + "px";
             $scope.navBubbles[i].top = y + "px";
             $scope.navBubbles[i].angle = angleInDeg;
+
+            console.log(i, angle, wheelAngle);
 
             angle += step;
         }
@@ -143,6 +134,8 @@ angular.module('starter.controllers', [])
     }
     console.log(navBallAnimators.length);
 
+    /* HELPER FUNCTIONS */
+
     var RADIUS_DIAL = $scope.dialWidth / 2;
 
     function getDeltaAngleFromDeltaX(deltaX) {
@@ -173,6 +166,40 @@ angular.module('starter.controllers', [])
 
         return velocityX;
     }
+
+    function getTopBubbleIndex(absoluteRotation) {
+
+        // Reverse rotation needed as we want to find bubble on moving frame of reference
+        reverseRotation = ( 360 - ( absoluteRotation % 360 ) ) % 360;
+
+        var stepAngleDegrees = $scope.stepAngleDegrees;
+        var bubbleCount = $scope.navBubbles.length;
+
+        var leftHandBubbleIndex = Math.floor( reverseRotation/stepAngleDegrees )
+
+        console.log(
+            Math.round(absoluteRotation), 
+            Math.round(reverseRotation),
+            leftHandBubbleIndex
+        );
+
+        var leftHandBubbleAngle = leftHandBubbleIndex * stepAngleDegrees;
+        // Return left hand bubble if reverse rotation is less than midpoint to the righ
+        if ( reverseRotation < (leftHandBubbleAngle+stepAngleDegrees/2) ) {
+            return leftHandBubbleIndex;
+        // Otherwise return right hand bubble
+        } else {
+            return (leftHandBubbleIndex + 1) % bubbleCount; // Modulus is to wrap round from last bubble to first bubble
+        }
+
+    }
+
+    function getBubbleAngle(bubbleIndex) {
+
+    }
+
+
+    /* END HELPER FUNCTIONS */
 
 
     // Init - setup transition properties (setting duration to zero disables transition)
@@ -208,7 +235,7 @@ angular.module('starter.controllers', [])
         
         // Simple drag (low velocity)
         if ( Math.abs(velocity) < VEL_THROW ) {
-            console.log("simple drag");
+            //console.log("simple drag");
             currentMode = 'drag';
             thisRotation = currentRotation + getDeltaAngleFromDeltaX(deltaX);
             dialElem.style['-webkit-transition-duration'] = '0s';      
@@ -218,38 +245,12 @@ angular.module('starter.controllers', [])
                 allBubbleElements[i].style['-webkit-transition-duration'] = '0s';
                 allBubbleElements[i].style.webkitTransform = "rotate(" + (-thisRotation) + "deg)";
             }
-        
-        // Throw effect
-        } else {
-
+  
+            highlightClosestBubble(thisRotation);
 
         }
 
 
-
-        /*
-        // SELECT CLOSEST BUBBLE
-
-        var selectedBubble = -1;
-        var selectedIndex = -1;
-        var selectedBubbleDistance = 999999;
-
-        for (var i = 0; i < $scope.navBubbles.length; i++) {
-            //console.log(Math.abs(($scope.currentRotation % 360) - $scope.navBubbles[i].angle));
-            if (Math.abs(($scope.currentRotation % 360) - $scope.navBubbles[i].angle) < selectedBubbleDistance) {
-                selectedBubble = $scope.navBubbles[i];
-                selectedIndex = i;
-                selectedBubbleDistance = Math.abs(($scope.currentRotation % 360) - $scope.navBubbles[i].angle);
-            }
-        }
-
-        //console.log("selected index", selectedIndex);
-
-        $scope.highlightedIndex = selectedIndex;
-        $scope.$apply();
-        */
-
-        $scope.$apply();
     }
 
 
@@ -259,7 +260,8 @@ angular.module('starter.controllers', [])
             $scope.lastDragDirection = null;
             $scope.lastDragDistance = null;
 
-            currentRotation = thisRotation;            
+            currentRotation = thisRotation; 
+            snapToClosestBubble(currentRotation);          
         }        
     }
 
@@ -295,8 +297,20 @@ angular.module('starter.controllers', [])
         //thisRotation = thisVelocityRotation;
         currentRotation = thisVelocityRotation; 
         //$scope.currentRotation = currentRotation;
+        highlightClosestBubble(currentRotation);
         $scope.$apply();
 
+    }
+
+    function highlightClosestBubble(absoluteRotation) {
+        console.clear();
+        console.log( absoluteRotation, getTopBubbleIndex(absoluteRotation) );
+        $scope.highlightedIndex = getTopBubbleIndex(absoluteRotation);
+        $scope.$apply();
+    }
+
+    function snapToClosestBubble(absoluteRotation) {
+        
     }
 
 
