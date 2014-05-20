@@ -1,3 +1,5 @@
+/* GLOBAL TIMER VARIABLES */
+
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope) {
@@ -12,9 +14,9 @@ angular.module('starter.controllers', [])
     const THROW_ROTATION_COMPONENT_LINEAR_MULTIPLIER = 10;    // y = Mx + c
 
     const WEBKIT_TRANSITION_DIAL_ROTATE = 'none';
-    const DIAL_SPIN_DURATION_SECS = 15;
-    const WEBKIT_TRANSITION_DIAL_SPIN = '-webkit-transform ' + parseInt(DIAL_SPIN_DURATION_SECS + 5) + 's cubic-bezier(0.075, 0.82, 0.165, 1)'         // Ease Out Circ
-    const WEBKIT_TRANSITION_DIAL_BOUNCE = '-webkit-transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'   // Ease Out Back
+    const DIAL_SPIN_DURATION_SECS = 5;
+    const WEBKIT_TRANSITION_DIAL_SPIN = '-webkit-transform ' + parseInt(DIAL_SPIN_DURATION_SECS) + 's cubic-bezier(0.075, 0.82, 0.165, 1)'         // Ease Out Circ
+    const WEBKIT_TRANSITION_DIAL_BOUNCE = '-webkit-transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)'   // Ease Out Back
     const CURRENT_MODE_DRAG = 'drag';
     const CURRENT_MODE_THROW = 'throw';
     
@@ -91,6 +93,9 @@ angular.module('starter.controllers', [])
     }
 
     $scope.distributeBubbles($scope.dialWidth);
+    
+    /* MODULE LEVEL VARAIBLES */
+
     var currentRotation = 0;
     //$scope.currentRotation = currentRotation;
     var thisRotation = 0;
@@ -99,7 +104,8 @@ angular.module('starter.controllers', [])
 
     var allBubbleElements = document.getElementsByClassName("bubble-icon");
 
-    $scope.dragTimer = null;
+    var INTERVAL_throwRefresh = null;
+    var TIMEOUT_throwEnd = null;
 
     $scope.calcLeftForContent = function(index) {
         if (index == $scope.highlightedIndex) {
@@ -251,6 +257,14 @@ angular.module('starter.controllers', [])
         setRotationOnDial(instantAngle);
         currentRotation = instantAngle;
 
+        clearInterval(INTERVAL_throwRefresh);
+        INTERVAL_throwRefresh = null;
+        
+        clearTimeout(TIMEOUT_throwEnd);
+        TIMEOUT_throwEnd = null;
+
+        highlightClosestBubble(currentRotation);
+
     }
 
     var releaseEvent = function(evt) {
@@ -309,10 +323,25 @@ angular.module('starter.controllers', [])
             setStyleOnDial('-webkit-transition', WEBKIT_TRANSITION_DIAL_SPIN)
             setRotationOnDial(thisVelocityRotation);
 
-            currentRotation = thisVelocityRotation; 
+            // Keep highlighting bubbles as dial spins        
+            if (!INTERVAL_throwRefresh) {
+                INTERVAL_throwRefresh = setInterval(function() {
+                    var instantAngle = getComputedStyleAngleInDegrees(dialElem);
+                    highlightClosestBubble(instantAngle);
+                }, 200);
+            }
 
-            highlightClosestBubble(currentRotation);
-            $scope.$apply();
+            // Timer to stop interval timer above and snap to closest bubble
+            if (!TIMEOUT_throwEnd) {
+                TIMEOUT_throwEnd = setTimeout(function() {
+                    clearInterval(INTERVAL_throwRefresh);
+                    INTERVAL_throwRefresh = null;
+
+                    currentRotation = getComputedStyleAngleInDegrees(dialElem);
+                    snapToClosestNotch(currentRotation);
+                }, 0.3*DIAL_SPIN_DURATION_SECS*1000);                
+            }
+
 
         }
 
