@@ -14,10 +14,12 @@
     padding-top: 10px;
     -webkit-transition: -webkit-transform 0.3s ease-in;
     -webkit-transform: translate3d(0, 0, 0);
+    opacity: 0.3;
 }
 
-.highlighted-bubble {
-    -webkit-transform: scale(1.8);
+.nav-ball.highlighted-bubble {
+    -webkit-transform: scale(1.4);
+    opacity: 1;
 }
 
 .box {
@@ -100,8 +102,7 @@
     
     -webkit-transform: translate3d(0, 0, 0);
     -webkit-transform: rotate(0deg);
-    -webkit-transform: translateZ(0);
-
+    -webkit-transform: translateZ(0sca
     border-color: RGBA(141, 139, 141, 0.1);
     border-width: 1px;
     border-style: solid;
