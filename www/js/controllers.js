@@ -232,12 +232,12 @@ angular.module('starter.controllers', [])
             //console.log("simple drag");
             currentMode = 'drag';
             thisRotation = currentRotation + getDeltaAngleFromDeltaX(deltaX);
-            dialElem.style['-webkit-transition-duration'] = '0s';      
-            dialElem.style.webkitTransform = "rotate(" + thisRotation + "deg)";
+            dialElem.style['-webkit-transition-duration'] = '0s';
+            dialElem.style.webkitTransform = "translate3d(0px, 0px, 0px) rotate(" + thisRotation + "deg)";
             // Compenstate for CSS cascade rotations in bubbles
             for (var i = 0; i < allBubbleElements.length; i++) {
                 allBubbleElements[i].style['-webkit-transition-duration'] = '0s';
-                allBubbleElements[i].style.webkitTransform = "rotate(" + (-thisRotation) + "deg)";
+                allBubbleElements[i].style.webkitTransform = "translate3d(0px, 0px, 0px) rotate(" + (-thisRotation) + "deg)";
             }
   
             highlightClosestBubble(thisRotation);
