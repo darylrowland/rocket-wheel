@@ -230,7 +230,7 @@ angular.module('starter.controllers', [])
         // arc sin, convert from radians to degrees, round
         // DO NOT USE: see update below
         var sin = b/scale;
-        var angle = Math.round(Math.asin(sin) * (180/Math.PI));
+        var angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
 
         // works!
         //console.log('Rotate: ' + angle + 'deg');
