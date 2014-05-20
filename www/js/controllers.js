@@ -11,12 +11,12 @@ angular.module('starter.controllers', [])
     const THROW_DELTA_DELTAX = 100;    // Threshold for change in DeltaX value at which gesture turns into a throw
 
     const THROW_ROTATION_COMPONENT_CONSTANT = 50;           // y = mx + C
-    const THROW_ROTATION_COMPONENT_LINEAR_MULTIPLIER = 10;    // y = Mx + c
+    const THROW_ROTATION_COMPONENT_LINEAR_MULTIPLIER = 100;    // y = Mx + c
 
     const WEBKIT_TRANSITION_DIAL_ROTATE = 'none';
     const DIAL_SPIN_DURATION_SECS = 5;
     const WEBKIT_TRANSITION_DIAL_SPIN = '-webkit-transform ' + parseInt(DIAL_SPIN_DURATION_SECS) + 's cubic-bezier(0.075, 0.82, 0.165, 1)'         // Ease Out Circ
-    const WEBKIT_TRANSITION_DIAL_BOUNCE = '-webkit-transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)'   // Ease Out Back
+    const WEBKIT_TRANSITION_DIAL_BOUNCE = '-webkit-transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)'   // Ease Out Back
     const CURRENT_MODE_DRAG = 'drag';
     const CURRENT_MODE_THROW = 'throw';
     
@@ -323,6 +323,8 @@ angular.module('starter.controllers', [])
             setStyleOnDial('-webkit-transition', WEBKIT_TRANSITION_DIAL_SPIN)
             setRotationOnDial(thisVelocityRotation);
 
+            currentRotation = thisVelocityRotation;
+
             // Keep highlighting bubbles as dial spins        
             if (!INTERVAL_throwRefresh) {
                 INTERVAL_throwRefresh = setInterval(function() {
@@ -337,9 +339,9 @@ angular.module('starter.controllers', [])
                     clearInterval(INTERVAL_throwRefresh);
                     INTERVAL_throwRefresh = null;
 
-                    currentRotation = getComputedStyleAngleInDegrees(dialElem);
+                    highlightClosestBubble(currentRotation);
                     snapToClosestNotch(currentRotation);
-                }, 0.3*DIAL_SPIN_DURATION_SECS*1000);                
+                }, DIAL_SPIN_DURATION_SECS*1000);
             }
 
 
@@ -365,6 +367,8 @@ angular.module('starter.controllers', [])
 
     function snapToClosestNotch(absoluteRotation) {
         var closestNotchAngle = getClosestNotchAngle(absoluteRotation);
+        console.log('***', absoluteRotation, closestNotchAngle);
+
         setStyleOnDial('-webkit-transition', WEBKIT_TRANSITION_DIAL_BOUNCE);
         setRotationOnDial(closestNotchAngle);
         currentRotation = closestNotchAngle;
