@@ -8,8 +8,8 @@ angular.module('starter.controllers', [])
     //var VEL_THROW = 10;
     const THROW_DELTA_DELTAX = 100;    // Threshold for change in DeltaX value at which gesture turns into a throw
 
-    const THROW_ROTATION_COMPONENT_CONSTANT = 0;           // y = mx + C
-    const THROW_ROTATION_COMPONENT_LINEAR_MULTIPLIER = 3;    // y = Mx + c
+    const THROW_ROTATION_COMPONENT_CONSTANT = 50;           // y = mx + C
+    const THROW_ROTATION_COMPONENT_LINEAR_MULTIPLIER = 10;    // y = Mx + c
 
     const WEBKIT_TRANSITION_DIAL_ROTATE = 'none';
     const DIAL_SPIN_DURATION_SECS = 15;
@@ -296,8 +296,8 @@ angular.module('starter.controllers', [])
 
             // Throw effect
 
-            var rotationTargetDelta = THROW_ROTATION_COMPONENT_CONSTANT + THROW_ROTATION_COMPONENT_LINEAR_MULTIPLIER*(Math.abs(deltaDeltaX));
-            if ( deltaDeltaX < 0 ) {                  // Note:  No need to worry about deltaDeltaX magnitude here, only sign. (Magnitude must be above a certain threshold to reach this point.)
+            var rotationTargetDelta = Math.round(THROW_ROTATION_COMPONENT_CONSTANT + THROW_ROTATION_COMPONENT_LINEAR_MULTIPLIER*(Math.abs(evt.gesture.velocityX)));
+            if ( evt.gesture.direction=="left" ) {                  // Note:  No need to worry about deltaDeltaX magnitude here, only sign. (Magnitude must be above a certain threshold to reach this point.)
                 rotationTargetDelta = -rotationTargetDelta;
             } 
 
