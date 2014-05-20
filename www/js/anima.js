@@ -1,2 +1,1034 @@
-!function(){"use strict";function t(t){return w?w+t:t}function i(){this.handlers={}}function e(t,i,e,n,s){this.item=t,this.translate=i.translate&&i.translate.map(parseFloat),this.rotate=i.rotate&&i.rotate.map(parseFloat),this.scale=i.scale,this.opacity=i.opacity,this.start=null,this.diff=null,this.duration=0|(i.duration||e),this.delay=0|(i.delay||s),this.ease=O[i.ease]||O[n]||O.linear,this.easeName=n||"linear"}function n(t,i,e,n,s,o){this.item=t,this.name=i.name||i,this.start=null,this.diff=null,this.duration=0|(i.duration||e),this.delay=0|(i.delay||s),this.ease=O.css[i.ease]||O.css[n]||O.css.linear,this._infinite=!1,this._generated=o}function s(t){i.call(this),this.start=null,this.item=t,this.delay=0,this.duration=0,this.easeName="linear",this.animations=[]}function o(t){s.call(this,t)}function r(t){s.call(this,t),this._infinite=!1}function a(t,i){!document.styleSheets.length&&this.createStyleSheet(),this.stylesheet=document.styleSheets[0],this.item=t,this.animation=t.animation,!i&&this.style()}function c(){i.call(this),this.items=[],this.frame=null,this.init()}function u(){c.call(this,!0),this.currentTime=0,this.start=0}function h(t){i.call(this),this.dom=t,this.init()}function p(){var t=x.sub(this.state.translate,this.current.position);this.current.acceleration=x.add(this.current.acceleration,t)}function l(t,i,e){t||(t=x.set(0)),i||(i=x.set(0)),e||(e=!0);for(var n=0;3>n;++n)(this.current.position[n]<t[n]||this.current.position[n]>i[n])&&(e?this.previous.position[n]=2*this.current.position[n]-this.previous.position[n]:this.current.position[n]=Math.max(t[n],Math.min(i[n],this.current.position[n])))}function f(t,i){var e=this.current,n=this.previous;e.acceleration=x.scale(e.acceleration,this.mass),e.velocity=x.sub(e.position,n.position),void 0!==i&&(e.velocity=x.scale(e.velocity,i)),n.position=e.position,e.position=x.add(e.position,x.add(e.velocity,x.scale(e.acceleration,t*t))),e.acceleration=x.zero()}function m(t,i,e,n){h.call(this,t),i===Object(i)&&(e=i.viscosity,n=i.edge,i=i.mass),i/=100,i||(i=.01),e||(e=.1),n||(n=!1),this.mass=1/i,this.viscosity=e,this.edge=n}var y={};y.world=function(){return new c},y.timeline=function(){return new u},"object"==typeof module&&"object"==typeof module.exports?module.exports=y:"function"==typeof define&&define.amd?define(y):window.anima=window.a=y;for(var d=top.requestAnimationFrame,v=top.cancelAnimationFrame,b=["moz","webkit","ms"],g=0;g<b.length&&!d;g++)d=top[b[g]+"RequestAnimationFrame"],v=top[b[g]+"CancelAnimationFrame"]||top[b[g]+"CancelRequestAnimationFrame"];var z,w=([].slice.call(getComputedStyle(document.documentElement,null)).join("").match(/(-(moz|webkit|ms)-)transform/)||[])[1],M=t("transform"),k=t("animation"),A=top.performance&&top.performance.now?top.performance:Date;d(function(t){z=t>1e12!=A.now()>1e12});var x={set:function(t,i,e){return Array.isArray(t)&&(i=t[1],e=t[2],t=t[0]),void 0===t&&(t=0),void 0===i&&(i=t,e=t),[t,i,e]},length:function(t,i,e){return Array.isArray(t)&&(i=t[1],e=t[2],t=t[0]),Math.sqrt(t*t+i*i+e*e)},add:function(t,i){return[t[0]+i[0],t[1]+i[1],t[2]+i[2]]},sub:function(t,i){return[t[0]-i[0],t[1]-i[1],t[2]-i[2]]},norm:function(t,i,e){Array.isArray(t)&&(i=t[1],e=t[2],t=t[0]);var n=this.length(t,i,e);return 0!==n?(t/=n,i/=n,e/=n):(t=0,i=0,e=0),[t,i,e]},dist:function(t,i){var e=t[0]-i[0],n=t[1]-i[1],s=t[2]-i[2];return Math.sqrt(e*e+n*n+s+s)},cross:function(t,i){var e=t[1]*i[2]-t[2]*i[1],n=t[2]*i[0]-t[0]*i[2],s=t[1]*i[1]-t[1]*i[0];return[e,n,s]},clone:function(t){return t.slice()},scale:function(t,i,e,n){return Array.isArray(t)&&(n=i,i=t[1],e=t[2],t=t[0]),[t*n,i*n,e*n]},zero:function(){return[0,0,0]}},q=Math.PI/180,j={identity:function(){return[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]},multiply:function S(t,i){var e=this.identity();return e[0]=t[0]*i[0]+t[1]*i[4]+t[2]*i[8],e[1]=t[0]*i[1]+t[1]*i[5]+t[2]*i[9],e[2]=t[0]*i[2]+t[1]*i[6]+t[2]*i[10],e[4]=t[4]*i[0]+t[5]*i[4]+t[6]*i[8],e[5]=t[4]*i[1]+t[5]*i[5]+t[6]*i[9],e[6]=t[4]*i[2]+t[5]*i[6]+t[6]*i[10],e[8]=t[8]*i[0]+t[9]*i[4]+t[10]*i[8],e[9]=t[8]*i[1]+t[9]*i[5]+t[10]*i[9],e[10]=t[8]*i[2]+t[9]*i[6]+t[10]*i[10],e[12]=t[12]*i[0]+t[13]*i[4]+t[14]*i[8]+i[12],e[13]=t[12]*i[1]+t[13]*i[5]+t[14]*i[9]+i[13],e[14]=t[12]*i[2]+t[13]*i[6]+t[14]*i[10]+i[14],2>=arguments.length?e:S.apply(this,[e].concat(Array.prototype.slice.call(arguments,2)))},translate:function(t,i,e){return t||i||e?(t||(t=0),i||(i=0),e||(e=0),[1,0,0,0,0,1,0,0,0,0,1,0,t,i,e,1]):this.identity()},scale:function(t,i,e){return t||i||e?(t||(t=1),i||(i=1),e||(e=1),[t,0,0,0,0,i,0,0,0,0,e,0,0,0,0,1]):this.identity()},rotate:function(t,i,e){if(!(t||i||e))return this.identity();t||(t=0),i||(i=0),e||(e=0),t*=q,i*=q,e*=q;var n=Math.sin(t),s=Math.cos(t),o=Math.sin(i),r=Math.cos(i),a=Math.sin(e),c=Math.cos(e);return[r*c,s*a+n*o*c,n*a-s*o*c,0,-r*a,s*c-n*o*a,n*c+s*o*a,0,o,-n*r,s*r,0,0,0,0,1]},rotate3d:function(t,i,e,n){n||(n=0),n*=q;var s=Math.sin(n),o=Math.cos(n),r=x.norm(t,i,e);t=r[0],i=r[1],e=r[2];var a=t*t,c=i*i,u=e*e,h=1-o;return[a+(1-a)*o,t*i*h+e*s,t*e*h-i*s,0,t*i*h-e*s,c+(1-c)*o,i*e*h+t*s,0,t*e*h+i*s,i*e*h-t*s,u+(1-u)*o,0,0,0,0,1]},skew:function(t,i){return t||i?(t||(t=0),i||(i=0),t*=q,i*=q,[1,Math.tan(i),0,0,Math.tan(t),1,0,0,0,0,1,0,0,0,0,1]):this.identity()},perspective:function(t){return t=-1/t,[1,0,0,0,0,1,0,0,0,0,1,t,0,0,0,1]},parse:function(t){var i=t.match(/\((.+)\)/)[1].split(/,\s?/);return 6===i.length&&(i.splice(2,0,"0","0"),i.splice(6,0,"0","0"),i.splice(8,0,"0","0","1","0"),i.push("0","1")),i},inverse:function(t){var i=this.identity(),e=t[5]*t[10]-t[6]*t[9],n=t[1]*t[10]-t[2]*t[9],s=t[1]*t[6]-t[2]*t[5],o=t[4]*t[10]-t[6]*t[8],r=t[0]*t[10]-t[2]*t[8],a=t[0]*t[6]-t[2]*t[4],c=t[4]*t[9]-t[5]*t[8],u=t[0]*t[9]-t[1]*t[8],h=t[0]*t[5]-t[1]*t[4],p=1/(t[0]*e-t[1]*o+t[2]*c);return i[0]=p*e,i[1]=-p*n,i[2]=p*s,i[4]=-p*o,i[5]=p*r,i[6]=-p*a,i[8]=p*c,i[9]=-p*u,i[10]=p*h,i[12]=-t[12]*i[0]-t[13]*i[4]-t[14]*i[8],i[13]=-t[12]*i[1]-t[13]*i[5]-t[14]*i[9],i[14]=-t[12]*i[2]-t[13]*i[6]-t[14]*i[10],i},compose:function(t,i,e){t||(t=[]),i||(i=[]),e||(e=[]);var n=this.rotate(i[0],i[1],i[2]);return e.length&&(n[0]*=e[0],n[1]*=e[0],n[2]*=e[0],n[4]*=e[1],n[5]*=e[1],n[6]*=e[1],n[8]*=e[2],n[9]*=e[2],n[10]*=e[2]),t.length&&(n[12]=t[0],n[13]=t[1],n[14]=t[2]),n},decompose:function(t){var i=x.length(t[0],t[1],t[2]),e=x.length(t[4],t[5],t[6]),n=x.length(t[8],t[9],t[10]),s=Math.atan2(-t[9]/n,t[10]/n)/q,o=Math.asin(t[8]/n)/q,r=Math.atan2(-t[4]/e,t[0]/i)/q;(1===t[4]||-1===t[4])&&(s=0,o=t[4]*-Math.PI/2,r=t[4]*Math.atan2(t[6]/e,t[5]/e)/q);var a=t[12],c=t[13],u=t[14];return{translate:[a,c,u],rotate:[s,o,r],scale:[i,e,n]}},transpose:function(t){var i;return i=t[1],t[1]=t[4],t[4]=i,i=t[2],t[2]=t[8],t[8]=i,i=t[6],t[6]=t[9],t[9]=i,i=t[3],t[3]=t[12],t[12]=i,i=t[7],t[7]=t[13],t[13]=i,i=t[11],t[11]=t[14],t[14]=i,t},lookAt:function(t,i,e){var n=x.sub(t,i);n=x.norm(n),0===x.length(n)&&(n[2]=1);var s=x.cross(e,n);0===x.length(s)&&(n[0]+=1e-4,s=x.norm(x.cross(e,n)));var o=x.cross(n,s),r=this.identity();return r[0]=s[0],r[1]=s[1],r[2]=s[2],r[4]=o[0],r[5]=o[1],r[6]=o[2],r[8]=n[0],r[9]=n[1],r[10]=n[2],r},stringify:function(t){for(var i=0;i<t.length;++i)Math.abs(t[i])<1e-6&&(t[i]=0);return"matrix3d("+t.join()+")"}};i.prototype.on=function(t,i){return(this.handlers[t]=this.handlers[t]||[]).push(i),this},i.prototype.off=function(t,i){var e=this.handlers[t];return i?e.splice(e.indexOf(i),1):delete this.handlers[t],this},i.prototype.emit=function(t){var i=Array.prototype.slice.call(arguments,1),e=this.handlers[t];if(e)for(var n=0;n<e.length;++n)e[n].apply(this,i);return this},i.prototype.listeners=function(t){return this.handlers[t]||[]};var O=function(){var t={quad:function(t){return Math.pow(t,2)},cubic:function(t){return Math.pow(t,3)},quart:function(t){return Math.pow(t,4)},quint:function(t){return Math.pow(t,5)},expo:function(t){return Math.pow(t,6)},sine:function(t){return 1-Math.cos(t*Math.PI/2)},circ:function(t){return 1-Math.sqrt(1-t*t)},back:function(t){return t*t*(3*t-2)}},i={linear:function(t){return t}};return Object.keys(t).forEach(function(e){var n=t[e];i["ease-in-"+e]=n,i["ease-out-"+e]=function(t){return 1-n(1-t)},i["ease-in-out-"+e]=function(t){return.5>t?n(2*t)/2:1-n(-2*t+2)/2}}),i.css={linear:"cubic-bezier(0.000, 0.000, 1.000, 1.000)","ease-in-quad":"cubic-bezier(0.550, 0.085, 0.680, 0.530)","ease-in-cubic":"cubic-bezier(0.550, 0.055, 0.675, 0.190)","ease-in-quart":"cubic-bezier(0.895, 0.030, 0.685, 0.220)","ease-in-quint":"cubic-bezier(0.755, 0.050, 0.855, 0.060)","ease-in-sine":"cubic-bezier(0.470, 0.000, 0.745, 0.715)","ease-in-expo":"cubic-bezier(0.950, 0.050, 0.795, 0.035)","ease-in-circ":"cubic-bezier(0.600, 0.040, 0.980, 0.335)","ease-in-back":"cubic-bezier(0.600, -0.280, 0.735, 0.045)","ease-out-quad":"cubic-bezier(0.250, 0.460, 0.450, 0.940)","ease-out-cubic":"cubic-bezier(0.215, 0.610, 0.355, 1.000)","ease-out-quart":"cubic-bezier(0.165, 0.840, 0.440, 1.000)","ease-out-quint":"cubic-bezier(0.230, 1.000, 0.320, 1.000)","ease-out-sine":"cubic-bezier(0.390, 0.575, 0.565, 1.000)","ease-out-expo":"cubic-bezier(0.190, 1.000, 0.220, 1.000)","ease-out-circ":"cubic-bezier(0.075, 0.820, 0.165, 1.000)","ease-out-back":"cubic-bezier(0.175, 0.885, 0.320, 1.275)","ease-in-out-quad":"cubic-bezier(0.455, 0.030, 0.515, 0.955)","ease-in-out-cubic":"cubic-bezier(0.645, 0.045, 0.355, 1.000)","ease-in-out-quart":"cubic-bezier(0.770, 0.000, 0.175, 1.000)","ease-in-out-quint":"cubic-bezier(0.860, 0.000, 0.070, 1.000)","ease-in-out-sine":"cubic-bezier(0.445, 0.050, 0.550, 0.950)","ease-in-out-expo":"cubic-bezier(1.000, 0.000, 0.000, 1.000)","ease-in-out-circ":"cubic-bezier(0.785, 0.135, 0.150, 0.860)","ease-in-out-back":"cubic-bezier(0.680, -0.550, 0.265, 1.550)"},i}();e.prototype.init=function(t,i){if(null===this.start||i){this.start=t+this.delay;var e=this.item.state;this.initial={translate:e.translate.slice(),rotate:e.rotate.slice(),scale:e.scale.slice(),opacity:e.opacity}}},e.prototype.run=function(t){if(!(t<this.start)){var i=(t-this.start)/this.duration;i=this.ease(i),this.transform(i)}},e.prototype.pause=function(){this.diff=A.now()-this.start},e.prototype.resume=function(){this.start=A.now()-this.diff},e.prototype.set=function(t,i){var e=this.item.state,n=this.initial;if(Array.isArray(this[t]))for(var s=0;3>s;++s)this[t][s]&&(e[t][s]=n[t][s]+this[t][s]*i);else void 0!==this[t]&&(e[t]=n[t]+(this[t]-n[t])*i)},e.prototype.transform=function(t){this.set("translate",t),this.set("rotate",t),this.set("scale",t),this.set("opacity",t)},e.prototype.end=function(t){!t&&this.transform(1),this.start=null},n.prototype.init=function(t,i){(null===this.start||i)&&(this.start=t+this.delay,this.item.style(k,this.name+" "+this.duration+"ms"+" "+this.ease+" "+this.delay+"ms"+(this._infinite?" infinite":"")+" "+"forwards"))},n.prototype.run=function(){},n.prototype.pause=function(){this.item.style(k+"PlayState","paused"),this.diff=A.now()-this.start},n.prototype.resume=function(){this.item.style(k+"PlayState","running"),this.start=A.now()-this.diff},n.prototype.end=function(){if(this._generated){var t=getComputedStyle(this.item.dom,null),i=t[M],e=t.opacity;this.item.style(k,""),this.item.state=j.decompose(j.parse(i)),this.item.state.opacity=e,this.item.style()}this.start=null},s.prototype=Object.create(i.prototype),s.prototype.constructor=s,s.prototype.add=function(t,i,a,c,u){function h(t,e){var n=new r(t);return e.forEach(function(t){n.add(t,i,a,c)}),n}function p(t,e){var n=new o(t);return e.forEach(function(e){Array.isArray(e)?n.add(h(t,e)):n.add(e,i,a,c)}),n}return Array.isArray(t)?t=p(this.item,t):"string"==typeof t||void 0!=t.name?t=new n(this.item,t,i,a,c,u):t instanceof s||(t=new e(this.item,t,i,a,c)),this.animations.push(t),i=this.animations.map(function(t){return t.duration+t.delay}),this.duration=this instanceof o?Math.max.apply(null,i):i.reduce(function(t,i){return t+i},0),this},Object.defineProperty(s.prototype,"length",{get:function(){return this.animations.length}}),s.prototype.get=function(t){return this.animations[t]},s.prototype.empty=function(){this.animations=[]},s.prototype.animate=function(t,i,e,n){return this.add(t,i,e,n)},s.prototype.css=function(){return this.item.css()},o.prototype=Object.create(s.prototype),o.prototype.constructor=o,o.prototype.all=function(t){for(var i=Array.prototype.slice.call(arguments,1),e=0;e<this.animations.length;++e){var n=this.animations[e];n[t].apply(n,i)}},o.prototype.init=function(t,i){(null===this.start||i)&&(this.start=t,this.all("init",t,i),this.emit("start"))},o.prototype.run=function(t){if(this.animations.length){for(var i=0;i<this.animations.length;++i){var e=this.animations[i];e.start+e.duration<=t?(this.animations.splice(i--,1),e.end()):e.run(t)}this.item.style(),this.animations.length||this.end()}},o.prototype.seek=function(t){this.run(t)},o.prototype.pause=function(){this.all("pause")},o.prototype.resume=function(){this.all("resume")},o.prototype.end=function(t){this.all("end",t),this.emit("end")},r.prototype=Object.create(s.prototype),r.prototype.constructor=r,r.prototype.init=function(t,i){(null===this.start||i)&&(this.start=t,this.animations[0].init(t,i),this.emit("start"))},r.prototype.run=function(t,i){if(this.animations.length){for(;0!==this.animations.length;){if(i=this.animations[0],i instanceof n&&(i._infinite=this._infinite),i.init(t),!(i.start+i.duration<=t)){i.run(t);break}if(this._infinite&&i instanceof n)break;this.animations.shift(),i.end(),!this._infinite||i instanceof n||this.animations.push(i)}i instanceof n||this.item.style(),this.animations.length||this.end()}},r.prototype.seek=function(t){if(0!==this.animations.length)for(var i=0,e=0;e<this.animations.length;++e){var n=this.animations[e];n.init(i,!0);{if(!(n.start+n.duration<=t)){n.run(t),this.item.style();break}n.end(),i+=n.delay+n.duration}}},r.prototype.infinite=function(){return this._infinite=!0,this},r.prototype.pause=function(){this.animations.length&&this.animations[0].pause()},r.prototype.resume=function(){this.animations.length&&this.animations[0].resume()},r.prototype.end=function(t){for(var i=0;i<this.animations.length;++i)this.animations[i].end(t);this.animations=[],this._infinite=!1,this.emit("end")},a.prototype.createStyleSheet=function(){var t=document.createElement("style");document.getElementsByTagName("head")[0].appendChild(t)},a.prototype.pause=function(){this.animation.pause()},a.prototype.resume=function(){this.animation.resume()},a.prototype.stop=function(){var t=getComputedStyle(this.item.dom,null),i=t[M],e=t.opacity;return this.item.style(k,""),this.item.state=j.decompose(j.parse(i)),this.item.state.opacity=e,this.item.style(),this},a.prototype.style=function(){var t="a"+Date.now()+"r"+Math.floor(1e3*Math.random());this.stylesheet.insertRule(this.keyframes(t),this.stylesheet.cssRules.length),this.animation.empty(),this.animation.add(t,this.animation.duration,"",0,!0)},a.prototype.keyframes=function(i){for(var n=0,s=["@"+t("keyframes")+" "+i+"{"],o=0;o<this.animation.length;++o){var r=this.animation.get(o),a=this.animation.get(o+1);if(r.init(),r instanceof e)0===o&&s.push(this.frame(0,O.css[r.easeName])),r.delay&&s.push(this.frame(n+=r.delay)),r.transform(1),s.push(this.frame(n+=r.duration,a&&O.css[a.easeName]));else{var c=[];r.animations.forEach(function(t){t.delay&&-1===c.indexOf(t.delay)&&c.push(t.delay),t.duration&&-1===c.indexOf(t.delay+t.duration)&&c.push(t.delay+t.duration)}),c=c.sort(function(t,i){return t-i});for(var u=0;u<c.length;++u){for(var h=c[u],p=0;p<r.animations.length;++p){var l=r.animations[p];l.delay>=h||l.delay+l.duration<h||l.transform(l.ease((h-l.delay)/l.duration))}s.push(this.frame(n+=h))}}}return s.push("}"),s.join("")},a.prototype.percent=function(t){return(100*t/this.animation.duration).toFixed(3)},a.prototype.frame=function(i,e){var n=this.percent(i);return n+"% {"+(n?M+":"+this.item.transform()+";":"")+(n?"opacity:"+this.item.opacity()+";":"")+(e?t("animation-timing-function")+":"+e+";":"")+"}"},c.prototype=Object.create(i.prototype),c.prototype.constructor=c,c.prototype.init=function(){function t(e){z&&(e=A.now()),i.update(e),i.frame=d(t)}var i=this;this.frame=d(t)},c.prototype.update=function(t){for(var i=0;i<this.items.length;++i)this.items[i].update(t)},c.prototype.add=function(t,i,e,n){var s;return s=i?new m(t,i,e,n):new h(t),this.items.push(s),s},c.prototype.cancel=function(){this.frame&&v(this.frame),this.frame=0},c.prototype.stop=function(){this.cancel();for(var t=0;t<this.items.length;++t)this.items[t].stop()},c.prototype.pause=function(){this.cancel();for(var t=0;t<this.items.length;++t)this.items[t].pause()},c.prototype.resume=function(){for(var t=0;t<this.items.length;++t)this.items[t].resume();this.init()},u.prototype=Object.create(c.prototype),u.prototype.constructor=u,u.prototype.init=function(){function t(e){z&&(e=A.now()),i.running&&(i.currentTime=e-i.start),i.update(i.currentTime),i.frame=d(t)}this.frame=d(t);var i=this},u.prototype.update=function(t){for(var i=0,e=this.items.length;e>i;++i){var n=this.items[i];this.changed<e||this.running?(n.timeline(t),this.changed++,this.emit("update",t)):n.style()}},u.prototype.play=function(){this.running=!0,this.start=A.now()-this.currentTime},u.prototype.pause=function(){this.running=!1},u.prototype.stop=function(){this.currentTime=0,this.running=!1},u.prototype.seek=function(t){this.changed=0,this.currentTime=t},h.prototype=Object.create(i.prototype),h.prototype.constructor=h,h.prototype.init=function(){this.animation=new r(this),this.running=!0,this.state={translate:x.zero(),rotate:x.zero(),scale:x.set(1),opacity:1}},h.prototype.update=function(t){this.animation.run(t)},h.prototype.timeline=function(t){this.clear(),this.animation.seek(t)},h.prototype.pause=function(){this.running&&(this.animation.pause(),this.running=!1)},h.prototype.resume=function(){this.running||(this.animation.resume(),this.running=!0)},h.prototype.style=function(t,i){t&&i?this.dom.style[t]=i:(this.dom.style[M]=this.transform(),this.dom.style.opacity=this.opacity())},h.prototype.transform=function(){return j.stringify(this.matrix())},h.prototype.matrix=function(){var t=this.state;return j.compose(t.translate,t.rotate,t.scale)},h.prototype.center=function(){return j.decompose(j.inverse(this.matrix()))},h.prototype.lookAt=function(t){var i=j.decompose(j.lookAt(t,this.state.translate,x.set(0,1,0)));this.state.rotate=i.rotate},h.prototype.opacity=function(){return this.state.opacity},h.prototype.add=function(t,i){return this.state[t][0]+=i[0],this.state[t][1]+=i[1],this.state[t][2]+=i[2],this},h.prototype.set=function(t,i){return this.state[t]=i,this},h.prototype.translate=function(t){return this.add("translate",t)},h.prototype.rotate=function(t){return this.add("rotate",t)},h.prototype.scale=function(t){return this.add("scale",t)},h.prototype.clear=function(){this.state.translate=x.zero(),this.state.rotate=x.zero(),this.state.scale=x.set(1),this.state.opacity=1},h.prototype.animate=function(t,i,e,n){return this.animation.add(t,i,e,n)},h.prototype.finish=function(t){return this.animation.end(t),this},h.prototype.stop=function(){return this.finish(!0)},h.prototype.css=function(t){return new a(this,t)},m.prototype=Object.create(h.prototype),m.prototype.constructor=m,m.prototype.init=function(){h.prototype.init.call(this),this.current={position:x.zero(),velocity:x.zero(),acceleration:x.zero()},this.previous={position:x.zero(),velocity:x.zero(),acceleration:x.zero()},this.clock=null},m.prototype.update=function(t){this.animation.run(t),this.integrate(t),this.style()},m.prototype.timeline=function(t){this.clear(),this.animation.seek(t),this.integrate(t,!0),this.style()},m.prototype.integrate=function(t,i){this.clock||(this.clock=t);var e=t-this.clock;e&&(i&&(e=Math.max(-16,Math.min(16,e))),this.clock=t,e*=.001,p.call(this),this.edge&&l.call(this,x.set(this.edge.min),x.set(this.edge.max),this.edge.bounce),f.call(this,e,1-this.viscosity))},m.prototype.css=function(){throw new Error("CSS is nor supported for physics")},m.prototype.matrix=function(){var t=this.state;return j.compose(this.current.position,t.rotate,t.scale)}}();
-//# sourceMappingURL=anima.min.js.map
+(function() {
+  "use strict";
+  var a = {};
+  a.world = function() {
+    return new World();
+  };
+  a.timeline = function() {
+    return new Timeline();
+  };
+  if (typeof module === "object" && typeof module.exports === "object") {
+    module.exports = a;
+  } else if (typeof define === "function" && define.amd) {
+    define(a);
+  } else {
+    window.anima = window.a = a;
+  }
+  var requestAnimationFrame = top.requestAnimationFrame, cancelAnimationFrame = top.cancelAnimationFrame, vendors = [ "moz", "webkit", "ms" ];
+  for (var i = 0; i < vendors.length && !requestAnimationFrame; i++) {
+    requestAnimationFrame = top[vendors[i] + "RequestAnimationFrame"];
+    cancelAnimationFrame = top[vendors[i] + "CancelAnimationFrame"] || top[vendors[i] + "CancelRequestAnimationFrame"];
+  }
+  var prefix = ([].slice.call(getComputedStyle(document.documentElement, null)).join("").match(/(-(moz|webkit|ms)-)transform/) || [])[1], transformProperty = getProperty("transform"), animationProperty = getProperty("animation"), fixTick;
+  function getProperty(name) {
+    return prefix ? prefix + name : name;
+  }
+  var performance = top.performance && top.performance.now ? top.performance : Date;
+  requestAnimationFrame(function(tick) {
+    fixTick = tick > 1e12 != performance.now() > 1e12;
+  });
+  var Vector = {
+    set: function(x, y, z) {
+      if (Array.isArray(x)) {
+        y = x[1];
+        z = x[2];
+        x = x[0];
+      }
+      if (x === undefined) {
+        x = 0;
+      }
+      if (y === undefined) {
+        y = x;
+        z = x;
+      }
+      return [ x, y, z ];
+    },
+    length: function(x, y, z) {
+      if (Array.isArray(x)) {
+        y = x[1];
+        z = x[2];
+        x = x[0];
+      }
+      return Math.sqrt(x * x + y * y + z * z);
+    },
+    add: function(a, b) {
+      return [ a[0] + b[0], a[1] + b[1], a[2] + b[2] ];
+    },
+    sub: function(a, b) {
+      return [ a[0] - b[0], a[1] - b[1], a[2] - b[2] ];
+    },
+    norm: function(x, y, z) {
+      if (Array.isArray(x)) {
+        y = x[1];
+        z = x[2];
+        x = x[0];
+      }
+      var len = this.length(x, y, z);
+      if (len !== 0) {
+        x /= len;
+        y /= len;
+        z /= len;
+      } else {
+        x = 0;
+        y = 0;
+        z = 0;
+      }
+      return [ x, y, z ];
+    },
+    dist: function(a, b) {
+      var dx = a[0] - b[0], dy = a[1] - b[1], dz = a[2] - b[2];
+      return Math.sqrt(dx * dx + dy * dy + dz + dz);
+    },
+    cross: function(a, b) {
+      var x = a[1] * b[2] - a[2] * b[1], y = a[2] * b[0] - a[0] * b[2], z = a[1] * b[1] - a[1] * b[0];
+      return [ x, y, z ];
+    },
+    clone: function(v) {
+      return v.slice();
+    },
+    scale: function(x, y, z, f) {
+      if (Array.isArray(x)) {
+        f = y;
+        y = x[1];
+        z = x[2];
+        x = x[0];
+      }
+      return [ x * f, y * f, z * f ];
+    },
+    zero: function() {
+      return [ 0, 0, 0 ];
+    }
+  };
+  var radians = Math.PI / 180;
+  var Matrix = {
+    identity: function() {
+      return [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ];
+    },
+    multiply: function multiply(a, b) {
+      var c = this.identity();
+      c[0] = a[0] * b[0] + a[1] * b[4] + a[2] * b[8];
+      c[1] = a[0] * b[1] + a[1] * b[5] + a[2] * b[9];
+      c[2] = a[0] * b[2] + a[1] * b[6] + a[2] * b[10];
+      c[4] = a[4] * b[0] + a[5] * b[4] + a[6] * b[8];
+      c[5] = a[4] * b[1] + a[5] * b[5] + a[6] * b[9];
+      c[6] = a[4] * b[2] + a[5] * b[6] + a[6] * b[10];
+      c[8] = a[8] * b[0] + a[9] * b[4] + a[10] * b[8];
+      c[9] = a[8] * b[1] + a[9] * b[5] + a[10] * b[9];
+      c[10] = a[8] * b[2] + a[9] * b[6] + a[10] * b[10];
+      c[12] = a[12] * b[0] + a[13] * b[4] + a[14] * b[8] + b[12];
+      c[13] = a[12] * b[1] + a[13] * b[5] + a[14] * b[9] + b[13];
+      c[14] = a[12] * b[2] + a[13] * b[6] + a[14] * b[10] + b[14];
+      return 2 >= arguments.length ? c : multiply.apply(this, [ c ].concat(Array.prototype.slice.call(arguments, 2)));
+    },
+    translate: function(tx, ty, tz) {
+      if (!(tx || ty || tz)) return this.identity();
+      tx || (tx = 0);
+      ty || (ty = 0);
+      tz || (tz = 0);
+      return [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, tx, ty, tz, 1 ];
+    },
+    scale: function(sx, sy, sz) {
+      if (!(sx || sy || sz)) return this.identity();
+      sx || (sx = 1);
+      sy || (sy = 1);
+      sz || (sz = 1);
+      return [ sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1 ];
+    },
+    rotate: function(ax, ay, az) {
+      if (!(ax || ay || az)) return this.identity();
+      ax || (ax = 0);
+      ay || (ay = 0);
+      az || (az = 0);
+      ax *= radians;
+      ay *= radians;
+      az *= radians;
+      var sx = Math.sin(ax), cx = Math.cos(ax), sy = Math.sin(ay), cy = Math.cos(ay), sz = Math.sin(az), cz = Math.cos(az);
+      return [ cy * cz, cx * sz + sx * sy * cz, sx * sz - cx * sy * cz, 0, -cy * sz, cx * cz - sx * sy * sz, sx * cz + cx * sy * sz, 0, sy, -sx * cy, cx * cy, 0, 0, 0, 0, 1 ];
+    },
+    rotate3d: function(x, y, z, a) {
+      a || (a = 0);
+      a *= radians;
+      var s = Math.sin(a), c = Math.cos(a), norm = Vector.norm(x, y, z);
+      x = norm[0];
+      y = norm[1];
+      z = norm[2];
+      var xx = x * x, yy = y * y, zz = z * z, _c = 1 - c;
+      return [ xx + (1 - xx) * c, x * y * _c + z * s, x * z * _c - y * s, 0, x * y * _c - z * s, yy + (1 - yy) * c, y * z * _c + x * s, 0, x * z * _c + y * s, y * z * _c - x * s, zz + (1 - zz) * c, 0, 0, 0, 0, 1 ];
+    },
+    skew: function(ax, ay) {
+      if (!(ax || ay)) return this.identity();
+      ax || (ax = 0);
+      ay || (ay = 0);
+      ax *= radians;
+      ay *= radians;
+      return [ 1, Math.tan(ay), 0, 0, Math.tan(ax), 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ];
+    },
+    perspective: function(p) {
+      p = -1 / p;
+      return [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, p, 0, 0, 0, 1 ];
+    },
+    parse: function(s) {
+      var m = s.match(/\((.+)\)/)[1].split(/,\s?/);
+      if (m.length === 6) {
+        m.splice(2, 0, "0", "0");
+        m.splice(6, 0, "0", "0");
+        m.splice(8, 0, "0", "0", "1", "0");
+        m.push("0", "1");
+      }
+      return m;
+    },
+    inverse: function(m) {
+      var a = this.identity(), inv0 = m[5] * m[10] - m[6] * m[9], inv1 = m[1] * m[10] - m[2] * m[9], inv2 = m[1] * m[6] - m[2] * m[5], inv4 = m[4] * m[10] - m[6] * m[8], inv5 = m[0] * m[10] - m[2] * m[8], inv6 = m[0] * m[6] - m[2] * m[4], inv8 = m[4] * m[9] - m[5] * m[8], inv9 = m[0] * m[9] - m[1] * m[8], inv10 = m[0] * m[5] - m[1] * m[4], det = 1 / (m[0] * inv0 - m[1] * inv4 + m[2] * inv8);
+      a[0] = det * inv0;
+      a[1] = -det * inv1;
+      a[2] = det * inv2;
+      a[4] = -det * inv4;
+      a[5] = det * inv5;
+      a[6] = -det * inv6;
+      a[8] = det * inv8;
+      a[9] = -det * inv9;
+      a[10] = det * inv10;
+      a[12] = -m[12] * a[0] - m[13] * a[4] - m[14] * a[8];
+      a[13] = -m[12] * a[1] - m[13] * a[5] - m[14] * a[9];
+      a[14] = -m[12] * a[2] - m[13] * a[6] - m[14] * a[10];
+      return a;
+    },
+    compose: function(translate, rotate, scale) {
+      translate || (translate = []);
+      rotate || (rotate = []);
+      scale || (scale = []);
+      var a = this.rotate(rotate[0], rotate[1], rotate[2]);
+      if (scale.length) {
+        a[0] *= scale[0];
+        a[1] *= scale[0];
+        a[2] *= scale[0];
+        a[4] *= scale[1];
+        a[5] *= scale[1];
+        a[6] *= scale[1];
+        a[8] *= scale[2];
+        a[9] *= scale[2];
+        a[10] *= scale[2];
+      }
+      if (translate.length) {
+        a[12] = translate[0];
+        a[13] = translate[1];
+        a[14] = translate[2];
+      }
+      return a;
+    },
+    decompose: function(m) {
+      var sX = Vector.length(m[0], m[1], m[2]), sY = Vector.length(m[4], m[5], m[6]), sZ = Vector.length(m[8], m[9], m[10]);
+      var rX = Math.atan2(-m[9] / sZ, m[10] / sZ) / radians, rY = Math.asin(m[8] / sZ) / radians, rZ = Math.atan2(-m[4] / sY, m[0] / sX) / radians;
+      if (m[4] === 1 || m[4] === -1) {
+        rX = 0;
+        rY = m[4] * -Math.PI / 2;
+        rZ = m[4] * Math.atan2(m[6] / sY, m[5] / sY) / radians;
+      }
+      var tX = m[12], tY = m[13], tZ = m[14];
+      return {
+        translate: [ tX, tY, tZ ],
+        rotate: [ rX, rY, rZ ],
+        scale: [ sX, sY, sZ ]
+      };
+    },
+    transpose: function(m) {
+      var t;
+      t = m[1];
+      m[1] = m[4];
+      m[4] = t;
+      t = m[2];
+      m[2] = m[8];
+      m[8] = t;
+      t = m[6];
+      m[6] = m[9];
+      m[9] = t;
+      t = m[3];
+      m[3] = m[12];
+      m[12] = t;
+      t = m[7];
+      m[7] = m[13];
+      m[13] = t;
+      t = m[11];
+      m[11] = m[14];
+      m[14] = t;
+      return m;
+    },
+    lookAt: function(eye, target, up) {
+      var z = Vector.sub(eye, target);
+      z = Vector.norm(z);
+      if (Vector.length(z) === 0) z[2] = 1;
+      var x = Vector.cross(up, z);
+      if (Vector.length(x) === 0) {
+        z[0] += 1e-4;
+        x = Vector.norm(Vector.cross(up, z));
+      }
+      var y = Vector.cross(z, x);
+      var a = this.identity();
+      a[0] = x[0];
+      a[1] = x[1];
+      a[2] = x[2];
+      a[4] = y[0];
+      a[5] = y[1];
+      a[6] = y[2];
+      a[8] = z[0];
+      a[9] = z[1];
+      a[10] = z[2];
+      return a;
+    },
+    stringify: function(m) {
+      for (var i = 0; i < m.length; ++i) if (Math.abs(m[i]) < 1e-6) m[i] = 0;
+      return "matrix3d(" + m.join() + ")";
+    }
+  };
+  function EventEmitter() {
+    this.handlers = {};
+  }
+  EventEmitter.prototype.on = function(event, handler) {
+    (this.handlers[event] = this.handlers[event] || []).push(handler);
+    return this;
+  };
+  EventEmitter.prototype.off = function(event, handler) {
+    var handlers = this.handlers[event];
+    if (handler) {
+      handlers.splice(handlers.indexOf(handler), 1);
+    } else {
+      delete this.handlers[event];
+    }
+    return this;
+  };
+  EventEmitter.prototype.emit = function(event) {
+    var args = Array.prototype.slice.call(arguments, 1), handlers = this.handlers[event];
+    if (handlers) {
+      for (var i = 0; i < handlers.length; ++i) {
+        handlers[i].apply(this, args);
+      }
+    }
+    return this;
+  };
+  EventEmitter.prototype.listeners = function(event) {
+    return this.handlers[event] || [];
+  };
+  var easings = function() {
+    var fn = {
+      quad: function(p) {
+        return Math.pow(p, 2);
+      },
+      cubic: function(p) {
+        return Math.pow(p, 3);
+      },
+      quart: function(p) {
+        return Math.pow(p, 4);
+      },
+      quint: function(p) {
+        return Math.pow(p, 5);
+      },
+      expo: function(p) {
+        return Math.pow(p, 6);
+      },
+      sine: function(p) {
+        return 1 - Math.cos(p * Math.PI / 2);
+      },
+      circ: function(p) {
+        return 1 - Math.sqrt(1 - p * p);
+      },
+      back: function(p) {
+        return p * p * (3 * p - 2);
+      }
+    };
+    var easings = {
+      linear: function(p) {
+        return p;
+      }
+    };
+    Object.keys(fn).forEach(function(name) {
+      var ease = fn[name];
+      easings["ease-in-" + name] = ease;
+      easings["ease-out-" + name] = function(p) {
+        return 1 - ease(1 - p);
+      };
+      easings["ease-in-out-" + name] = function(p) {
+        return p < .5 ? ease(p * 2) / 2 : 1 - ease(p * -2 + 2) / 2;
+      };
+    });
+    easings.css = {
+      linear: "cubic-bezier(0.000, 0.000, 1.000, 1.000)",
+      "ease-in-quad": "cubic-bezier(0.550, 0.085, 0.680, 0.530)",
+      "ease-in-cubic": "cubic-bezier(0.550, 0.055, 0.675, 0.190)",
+      "ease-in-quart": "cubic-bezier(0.895, 0.030, 0.685, 0.220)",
+      "ease-in-quint": "cubic-bezier(0.755, 0.050, 0.855, 0.060)",
+      "ease-in-sine": "cubic-bezier(0.470, 0.000, 0.745, 0.715)",
+      "ease-in-expo": "cubic-bezier(0.950, 0.050, 0.795, 0.035)",
+      "ease-in-circ": "cubic-bezier(0.600, 0.040, 0.980, 0.335)",
+      "ease-in-back": "cubic-bezier(0.600, -0.280, 0.735, 0.045)",
+      "ease-out-quad": "cubic-bezier(0.250, 0.460, 0.450, 0.940)",
+      "ease-out-cubic": "cubic-bezier(0.215, 0.610, 0.355, 1.000)",
+      "ease-out-quart": "cubic-bezier(0.165, 0.840, 0.440, 1.000)",
+      "ease-out-quint": "cubic-bezier(0.230, 1.000, 0.320, 1.000)",
+      "ease-out-sine": "cubic-bezier(0.390, 0.575, 0.565, 1.000)",
+      "ease-out-expo": "cubic-bezier(0.190, 1.000, 0.220, 1.000)",
+      "ease-out-circ": "cubic-bezier(0.075, 0.820, 0.165, 1.000)",
+      "ease-out-back": "cubic-bezier(0.175, 0.885, 0.320, 1.275)",
+      "ease-in-out-quad": "cubic-bezier(0.455, 0.030, 0.515, 0.955)",
+      "ease-in-out-cubic": "cubic-bezier(0.645, 0.045, 0.355, 1.000)",
+      "ease-in-out-quart": "cubic-bezier(0.770, 0.000, 0.175, 1.000)",
+      "ease-in-out-quint": "cubic-bezier(0.860, 0.000, 0.070, 1.000)",
+      "ease-in-out-sine": "cubic-bezier(0.445, 0.050, 0.550, 0.950)",
+      "ease-in-out-expo": "cubic-bezier(1.000, 0.000, 0.000, 1.000)",
+      "ease-in-out-circ": "cubic-bezier(0.785, 0.135, 0.150, 0.860)",
+      "ease-in-out-back": "cubic-bezier(0.680, -0.550, 0.265, 1.550)"
+    };
+    return easings;
+  }();
+  function Animation(item, transform, duration, ease, delay) {
+    this.item = item;
+    this.translate = transform.translate && transform.translate.map(parseFloat);
+    this.rotate = transform.rotate && transform.rotate.map(parseFloat);
+    this.scale = transform.scale;
+    this.opacity = transform.opacity;
+    this.start = null;
+    this.diff = null;
+    this.duration = (transform.duration || duration) | 0;
+    this.delay = (transform.delay || delay) | 0;
+    this.ease = easings[transform.ease] || easings[ease] || easings.linear;
+    this.easeName = ease || "linear";
+  }
+  Animation.prototype.init = function(tick, force) {
+    if (this.start !== null && !force) return;
+    this.start = tick + this.delay;
+    var state = this.item.state;
+    this.initial = {
+      translate: state.translate.slice(),
+      rotate: state.rotate.slice(),
+      scale: state.scale.slice(),
+      opacity: state.opacity
+    };
+  };
+  Animation.prototype.run = function(tick) {
+    if (tick < this.start) return;
+    var percent = (tick - this.start) / this.duration;
+    percent = this.ease(percent);
+    this.transform(percent);
+  };
+  Animation.prototype.pause = function() {
+    this.diff = performance.now() - this.start;
+  };
+  Animation.prototype.resume = function() {
+    this.start = performance.now() - this.diff;
+  };
+  Animation.prototype.set = function(type, percent) {
+    var state = this.item.state, initial = this.initial;
+    if (Array.isArray(this[type])) {
+      for (var i = 0; i < 3; ++i) if (this[type][i]) {
+        state[type][i] = initial[type][i] + this[type][i] * percent;
+      }
+    } else if (this[type] !== undefined) {
+      state[type] = initial[type] + (this[type] - initial[type]) * percent;
+    }
+  };
+  Animation.prototype.transform = function(percent) {
+    this.set("translate", percent);
+    this.set("rotate", percent);
+    this.set("scale", percent);
+    this.set("opacity", percent);
+  };
+  Animation.prototype.end = function(abort) {
+    !abort && this.transform(1);
+    this.start = null;
+  };
+  function CssAnimation(item, animation, duration, ease, delay, generated) {
+    this.item = item;
+    this.name = animation.name || animation;
+    this.start = null;
+    this.diff = null;
+    this.duration = (animation.duration || duration) | 0;
+    this.delay = (animation.delay || delay) | 0;
+    this.ease = easings.css[animation.ease] || easings.css[ease] || easings.css.linear;
+    this._infinite = false;
+    this._generated = generated;
+  }
+  CssAnimation.prototype.init = function(tick, force) {
+    if (this.start !== null && !force) return;
+    this.start = tick + this.delay;
+    this.item.style(animationProperty, this.name + " " + this.duration + "ms" + " " + this.ease + " " + this.delay + "ms" + (this._infinite ? " infinite" : "") + " " + "forwards");
+  };
+  CssAnimation.prototype.run = function() {};
+  CssAnimation.prototype.pause = function() {
+    this.item.style(animationProperty + "PlayState", "paused");
+    this.diff = performance.now() - this.start;
+  };
+  CssAnimation.prototype.resume = function() {
+    this.item.style(animationProperty + "PlayState", "running");
+    this.start = performance.now() - this.diff;
+  };
+  CssAnimation.prototype.end = function() {
+    if (this._generated) {
+      var computed = getComputedStyle(this.item.dom, null), transform = computed[transformProperty], opacity = computed.opacity;
+      this.item.style(animationProperty, "");
+      this.item.state = Matrix.decompose(Matrix.parse(transform));
+      this.item.state.opacity = opacity;
+      this.item.style();
+    }
+    this.start = null;
+  };
+  function Collection(item) {
+    EventEmitter.call(this);
+    this.start = null;
+    this.item = item;
+    this.delay = 0;
+    this.duration = 0;
+    this.easeName = "linear";
+    this.animations = [];
+  }
+  Collection.prototype = Object.create(EventEmitter.prototype);
+  Collection.prototype.constructor = Collection;
+  Collection.prototype.add = function(transform, duration, ease, delay, generated) {
+    if (Array.isArray(transform)) {
+      transform = parallel(this.item, transform);
+    } else if (typeof transform == "string" || transform.name != undefined) {
+      transform = new CssAnimation(this.item, transform, duration, ease, delay, generated);
+    } else if (!(transform instanceof Collection)) {
+      transform = new Animation(this.item, transform, duration, ease, delay);
+    }
+    this.animations.push(transform);
+    duration = this.animations.map(function(a) {
+      return a.duration + a.delay;
+    });
+    if (this instanceof Parallel) {
+      this.duration = Math.max.apply(null, duration);
+    } else {
+      this.duration = duration.reduce(function(a, b) {
+        return a + b;
+      }, 0);
+    }
+    return this;
+    function sequence(item, transforms) {
+      var sequence = new Sequence(item);
+      transforms.forEach(function(t) {
+        sequence.add(t, duration, ease, delay);
+      });
+      return sequence;
+    }
+    function parallel(item, transforms) {
+      var parallel = new Parallel(item);
+      transforms.forEach(function(t) {
+        if (Array.isArray(t)) {
+          parallel.add(sequence(item, t));
+        } else {
+          parallel.add(t, duration, ease, delay);
+        }
+      });
+      return parallel;
+    }
+  };
+  Object.defineProperty(Collection.prototype, "length", {
+    get: function() {
+      return this.animations.length;
+    }
+  });
+  Collection.prototype.get = function(index) {
+    return this.animations[index];
+  };
+  Collection.prototype.empty = function() {
+    this.animations = [];
+  };
+  Collection.prototype.animate = function(transform, duration, ease, delay) {
+    return this.add(transform, duration, ease, delay);
+  };
+  Collection.prototype.css = function() {
+    return this.item.css();
+  };
+  function Parallel(item) {
+    Collection.call(this, item);
+  }
+  Parallel.prototype = Object.create(Collection.prototype);
+  Parallel.prototype.constructor = Parallel;
+  Parallel.prototype.all = function(method) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    for (var i = 0; i < this.animations.length; ++i) {
+      var a = this.animations[i];
+      a[method].apply(a, args);
+    }
+  };
+  Parallel.prototype.init = function(tick, force) {
+    if (this.start !== null && !force) return;
+    this.start = tick;
+    this.all("init", tick, force);
+    this.emit("start");
+  };
+  Parallel.prototype.run = function(tick) {
+    if (!this.animations.length) return;
+    for (var i = 0; i < this.animations.length; ++i) {
+      var a = this.animations[i];
+      if (a.start + a.duration <= tick) {
+        this.animations.splice(i--, 1);
+        a.end();
+        continue;
+      }
+      a.run(tick);
+    }
+    this.item.style();
+    if (!this.animations.length) {
+      this.end();
+    }
+  };
+  Parallel.prototype.seek = function(tick) {
+    this.run(tick);
+  };
+  Parallel.prototype.pause = function() {
+    this.all("pause");
+  };
+  Parallel.prototype.resume = function() {
+    this.all("resume");
+  };
+  Parallel.prototype.end = function(abort) {
+    this.all("end", abort);
+    this.emit("end");
+  };
+  function Sequence(item) {
+    Collection.call(this, item);
+    this._infinite = false;
+  }
+  Sequence.prototype = Object.create(Collection.prototype);
+  Sequence.prototype.constructor = Sequence;
+  Sequence.prototype.init = function(tick, force) {
+    if (this.start !== null && !force) return;
+    this.start = tick;
+    this.animations[0].init(tick, force);
+    this.emit("start");
+  };
+  Sequence.prototype.run = function(tick, a) {
+    if (!this.animations.length) return;
+    while (this.animations.length !== 0) {
+      a = this.animations[0];
+      if (a instanceof CssAnimation) {
+        a._infinite = this._infinite;
+      }
+      a.init(tick);
+      if (a.start + a.duration <= tick) {
+        if (!(this._infinite && a instanceof CssAnimation)) {
+          this.animations.shift();
+          a.end();
+        } else {
+          break;
+        }
+        if (this._infinite && !(a instanceof CssAnimation)) {
+          this.animations.push(a);
+        }
+        continue;
+      }
+      a.run(tick);
+      break;
+    }
+    if (!(a instanceof CssAnimation)) {
+      this.item.style();
+    }
+    if (!this.animations.length) {
+      this.end();
+    }
+  };
+  Sequence.prototype.seek = function(tick) {
+    if (this.animations.length === 0) return;
+    var time = 0;
+    for (var i = 0; i < this.animations.length; ++i) {
+      var a = this.animations[i];
+      a.init(time, true);
+      if (a.start + a.duration <= tick) {
+        a.end();
+        time += a.delay + a.duration;
+        continue;
+      }
+      a.run(tick);
+      this.item.style();
+      break;
+    }
+  };
+  Sequence.prototype.infinite = function() {
+    this._infinite = true;
+    return this;
+  };
+  Sequence.prototype.pause = function() {
+    this.animations.length && this.animations[0].pause();
+  };
+  Sequence.prototype.resume = function() {
+    this.animations.length && this.animations[0].resume();
+  };
+  Sequence.prototype.end = function(abort) {
+    for (var i = 0; i < this.animations.length; ++i) {
+      this.animations[i].end(abort);
+    }
+    this.animations = [];
+    this._infinite = false;
+    this.emit("end");
+  };
+  function CSS(item, idle) {
+    !document.styleSheets.length && this.createStyleSheet();
+    this.stylesheet = document.styleSheets[0];
+    this.item = item;
+    this.animation = item.animation;
+    !idle && this.style();
+  }
+  CSS.prototype.createStyleSheet = function() {
+    var style = document.createElement("style");
+    document.getElementsByTagName("head")[0].appendChild(style);
+  };
+  CSS.prototype.pause = function() {
+    this.animation.pause();
+  };
+  CSS.prototype.resume = function() {
+    this.animation.resume();
+  };
+  CSS.prototype.stop = function() {
+    var computed = getComputedStyle(this.item.dom, null), transform = computed[transformProperty], opacity = computed.opacity;
+    this.item.style(animationProperty, "");
+    this.item.state = Matrix.decompose(Matrix.parse(transform));
+    this.item.state.opacity = opacity;
+    this.item.style();
+    return this;
+  };
+  CSS.prototype.style = function() {
+    var animation = "a" + Date.now() + "r" + Math.floor(Math.random() * 1e3);
+    this.stylesheet.insertRule(this.keyframes(animation), this.stylesheet.cssRules.length);
+    this.animation.empty();
+    this.animation.add(animation, this.animation.duration, "", 0, true);
+  };
+  CSS.prototype.keyframes = function(name) {
+    var time = 0, rule = [ "@" + getProperty("keyframes") + " " + name + "{" ];
+    for (var i = 0; i < this.animation.length; ++i) {
+      var a = this.animation.get(i), aNext = this.animation.get(i + 1);
+      a.init();
+      if (a instanceof Animation) {
+        i === 0 && rule.push(this.frame(0, easings.css[a.easeName]));
+        a.delay && rule.push(this.frame(time += a.delay));
+        a.transform(1);
+        rule.push(this.frame(time += a.duration, aNext && easings.css[aNext.easeName]));
+      } else {
+        var frames = [];
+        a.animations.forEach(function(a) {
+          a.delay && frames.indexOf(a.delay) === -1 && frames.push(a.delay);
+          a.duration && frames.indexOf(a.delay + a.duration) === -1 && frames.push(a.delay + a.duration);
+        });
+        frames = frames.sort(function(a, b) {
+          return a - b;
+        });
+        for (var k = 0; k < frames.length; ++k) {
+          var frame = frames[k];
+          for (var j = 0; j < a.animations.length; ++j) {
+            var pa = a.animations[j];
+            if (pa.delay >= frame || pa.delay + pa.duration < frame) continue;
+            pa.transform(pa.ease((frame - pa.delay) / pa.duration));
+          }
+          rule.push(this.frame(time += frame));
+        }
+      }
+    }
+    rule.push("}");
+    return rule.join("");
+  };
+  CSS.prototype.percent = function(time) {
+    return (time * 100 / this.animation.duration).toFixed(3);
+  };
+  CSS.prototype.frame = function(time, ease) {
+    var percent = this.percent(time);
+    return percent + "% {" + (percent ? transformProperty + ":" + this.item.transform() + ";" : "") + (percent ? "opacity:" + this.item.opacity() + ";" : "") + (ease ? getProperty("animation-timing-function") + ":" + ease + ";" : "") + "}";
+  };
+  function World() {
+    EventEmitter.call(this);
+    this.items = [];
+    this.frame = null;
+    this.init();
+  }
+  World.prototype = Object.create(EventEmitter.prototype);
+  World.prototype.constructor = World;
+  World.prototype.init = function() {
+    var self = this;
+    this.frame = requestAnimationFrame(update);
+    function update(tick) {
+      if (fixTick) {
+        tick = performance.now();
+      }
+      self.update(tick);
+      self.frame = requestAnimationFrame(update);
+    }
+  };
+  World.prototype.update = function(tick) {
+    for (var i = 0; i < this.items.length; ++i) {
+      this.items[i].update(tick);
+    }
+  };
+  World.prototype.add = function(node, mass, viscosity, edge) {
+    var item;
+    if (mass) {
+      item = new Particle(node, mass, viscosity, edge);
+    } else {
+      item = new Item(node);
+    }
+    this.items.push(item);
+    return item;
+  };
+  World.prototype.cancel = function() {
+    this.frame && cancelAnimationFrame(this.frame);
+    this.frame = 0;
+  };
+  World.prototype.stop = function() {
+    this.cancel();
+    for (var i = 0; i < this.items.length; ++i) {
+      this.items[i].stop();
+    }
+  };
+  World.prototype.pause = function() {
+    this.cancel();
+    for (var i = 0; i < this.items.length; ++i) {
+      this.items[i].pause();
+    }
+  };
+  World.prototype.resume = function() {
+    for (var i = 0; i < this.items.length; ++i) {
+      this.items[i].resume();
+    }
+    this.init();
+  };
+  function Timeline() {
+    World.call(this, true);
+    this.currentTime = 0;
+    this.start = 0;
+  }
+  Timeline.prototype = Object.create(World.prototype);
+  Timeline.prototype.constructor = Timeline;
+  Timeline.prototype.init = function() {
+    this.frame = requestAnimationFrame(update);
+    var self = this;
+    function update(tick) {
+      if (fixTick) {
+        tick = performance.now();
+      }
+      if (self.running) {
+        self.currentTime = tick - self.start;
+      }
+      self.update(self.currentTime);
+      self.frame = requestAnimationFrame(update);
+    }
+  };
+  Timeline.prototype.update = function(tick) {
+    for (var i = 0, length = this.items.length; i < length; ++i) {
+      var item = this.items[i];
+      if (this.changed < length || this.running) {
+        item.timeline(tick);
+        this.changed++;
+        this.emit("update", tick);
+      } else {
+        item.style();
+      }
+    }
+  };
+  Timeline.prototype.play = function() {
+    this.running = true;
+    this.start = performance.now() - this.currentTime;
+  };
+  Timeline.prototype.pause = function() {
+    this.running = false;
+  };
+  Timeline.prototype.stop = function() {
+    this.currentTime = 0;
+    this.running = false;
+  };
+  Timeline.prototype.seek = function(time) {
+    this.changed = 0;
+    this.currentTime = time;
+  };
+  function Item(node) {
+    EventEmitter.call(this);
+    this.dom = node;
+    this.init();
+  }
+  Item.prototype = Object.create(EventEmitter.prototype);
+  Item.prototype.constructor = Item;
+  Item.prototype.init = function() {
+    this.animation = new Sequence(this);
+    this.running = true;
+    this.state = {
+      translate: Vector.zero(),
+      rotate: Vector.zero(),
+      scale: Vector.set(1),
+      opacity: 1
+    };
+  };
+  Item.prototype.update = function(tick) {
+    this.animation.run(tick);
+  };
+  Item.prototype.timeline = function(tick) {
+    this.clear();
+    this.animation.seek(tick);
+  };
+  Item.prototype.pause = function() {
+    if (!this.running) return;
+    this.animation.pause();
+    this.running = false;
+  };
+  Item.prototype.resume = function() {
+    if (this.running) return;
+    this.animation.resume();
+    this.running = true;
+  };
+  Item.prototype.style = function(property, value) {
+    if (property && value) {
+      this.dom.style[property] = value;
+    } else {
+      this.dom.style[transformProperty] = this.transform();
+      this.dom.style.opacity = this.opacity();
+    }
+  };
+  Item.prototype.transform = function() {
+    return Matrix.stringify(this.matrix());
+  };
+  Item.prototype.matrix = function() {
+    var state = this.state;
+    return Matrix.compose(state.translate, state.rotate, state.scale);
+  };
+  Item.prototype.center = function() {
+    return Matrix.decompose(Matrix.inverse(this.matrix()));
+  };
+  Item.prototype.lookAt = function(vector) {
+    var transform = Matrix.decompose(Matrix.lookAt(vector, this.state.translate, Vector.set(0, 1, 0)));
+    this.state.rotate = transform.rotate;
+  };
+  Item.prototype.opacity = function() {
+    return this.state.opacity;
+  };
+  Item.prototype.add = function(type, a) {
+    this.state[type][0] += a[0];
+    this.state[type][1] += a[1];
+    this.state[type][2] += a[2];
+    return this;
+  };
+  Item.prototype.set = function(type, a) {
+    this.state[type] = a;
+    return this;
+  };
+  Item.prototype.translate = function(t) {
+    return this.add("translate", t);
+  };
+  Item.prototype.rotate = function(r) {
+    return this.add("rotate", r);
+  };
+  Item.prototype.scale = function(s) {
+    return this.add("scale", s);
+  };
+  Item.prototype.clear = function() {
+    this.state.translate = Vector.zero();
+    this.state.rotate = Vector.zero();
+    this.state.scale = Vector.set(1);
+    this.state.opacity = 1;
+  };
+  Item.prototype.animate = function(transform, duration, ease, delay) {
+    return this.animation.add(transform, duration, ease, delay);
+  };
+  Item.prototype.finish = function(abort) {
+    this.animation.end(abort);
+    return this;
+  };
+  Item.prototype.stop = function() {
+    return this.finish(true);
+  };
+  Item.prototype.css = function(idle) {
+    return new CSS(this, idle);
+  };
+  function Constant() {
+    var force = Vector.sub(this.state.translate, this.current.position);
+    this.current.acceleration = Vector.add(this.current.acceleration, force);
+  }
+  function Attraction(radius, strength) {
+    radius || (radius = 1e3);
+    strength || (strength = 100);
+    var force = Vector.sub(this.state.translate, this.current.position), distance = Vector.length(force);
+    if (distance < radius) {
+      force = Vector.scale(Vector.norm(force), 1 - distance * distance / (radius * radius));
+      this.current.acceleration = Vector.add(this.current.acceleration, Vector.scale(force, strength));
+    }
+  }
+  function Edge(min, max, bounce) {
+    min || (min = Vector.set(0));
+    max || (max = Vector.set(0));
+    bounce || (bounce = true);
+    for (var i = 0; i < 3; ++i) {
+      if (this.current.position[i] < min[i] || this.current.position[i] > max[i]) {
+        if (bounce) {
+          this.previous.position[i] = 2 * this.current.position[i] - this.previous.position[i];
+        } else {
+          this.current.position[i] = Math.max(min[i], Math.min(max[i], this.current.position[i]));
+        }
+      }
+    }
+  }
+  function Verlet(delta, drag) {
+    var current = this.current, previous = this.previous;
+    current.acceleration = Vector.scale(current.acceleration, this.mass);
+    current.velocity = Vector.sub(current.position, previous.position);
+    if (drag !== undefined) {
+      current.velocity = Vector.scale(current.velocity, drag);
+    }
+    previous.position = current.position;
+    current.position = Vector.add(current.position, Vector.add(current.velocity, Vector.scale(current.acceleration, delta * delta)));
+    current.acceleration = Vector.zero();
+  }
+  function Particle(node, mass, viscosity, edge) {
+    Item.call(this, node);
+    if (mass === Object(mass)) {
+      viscosity = mass.viscosity;
+      edge = mass.edge;
+      mass = mass.mass;
+    }
+    mass /= 100;
+    mass || (mass = .01);
+    viscosity || (viscosity = .1);
+    edge || (edge = false);
+    this.mass = 1 / mass;
+    this.viscosity = viscosity;
+    this.edge = edge;
+  }
+  Particle.prototype = Object.create(Item.prototype);
+  Particle.prototype.constructor = Particle;
+  Particle.prototype.init = function() {
+    Item.prototype.init.call(this);
+    this.current = {
+      position: Vector.zero(),
+      velocity: Vector.zero(),
+      acceleration: Vector.zero()
+    };
+    this.previous = {
+      position: Vector.zero(),
+      velocity: Vector.zero(),
+      acceleration: Vector.zero()
+    };
+    this.clock = null;
+  };
+  Particle.prototype.update = function(tick) {
+    this.animation.run(tick);
+    this.integrate(tick);
+    this.style();
+  };
+  Particle.prototype.timeline = function(tick) {
+    this.clear();
+    this.animation.seek(tick);
+    this.integrate(tick, true);
+    this.style();
+  };
+  Particle.prototype.integrate = function(tick, clamp) {
+    this.clock || (this.clock = tick);
+    var delta = tick - this.clock;
+    if (delta) {
+      clamp && (delta = Math.max(-16, Math.min(16, delta)));
+      this.clock = tick;
+      delta *= .001;
+      Constant.call(this);
+      this.edge && Edge.call(this, Vector.set(this.edge.min), Vector.set(this.edge.max), this.edge.bounce);
+      Verlet.call(this, delta, 1 - this.viscosity);
+    }
+  };
+  Particle.prototype.css = function() {
+    throw new Error("CSS is nor supported for physics");
+  };
+  Particle.prototype.matrix = function() {
+    var state = this.state;
+    return Matrix.compose(this.current.position, state.rotate, state.scale);
+  };
+})();
