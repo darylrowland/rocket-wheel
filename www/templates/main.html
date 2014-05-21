@@ -16,8 +16,8 @@
         </div>
         -->
 
-        <div class="panel-container" style="width: {{windowWidth*navBubbles.length}}px" id="panelContainer">
-            <div class="panel" ng-repeat="bubble in navBubbles" style="width: {{windowWidth}}px">
+        <div class="panel-container" style="width: {{windowWidth*navBubblesWithDupFirstEntryAtEnd.length}}px" id="panelContainer">
+            <div class="panel" ng-repeat="bubble in navBubblesWithDupFirstEntryAtEnd" style="width: {{windowWidth}}px">
                 <div class="content-heading">{{bubble.title}}</div>
                 <div>
                     <img src="img/panels/{{bubble.image}}">

@@ -39,6 +39,8 @@ angular.module('starter.controllers', [])
         {id: "houseMove", title: "Travel", colour: "RGBA(143, 49, 171, 1)", icon: "ion-model-s", image: "travel.png"}
     ];
 
+    $scope.navBubblesWithDupFirstEntryAtEnd = angular.copy( $scope.navBubbles );
+    $scope.navBubblesWithDupFirstEntryAtEnd.push( $scope.navBubbles[0] );
 
 
     // Gesture stuff
@@ -221,8 +223,13 @@ angular.module('starter.controllers', [])
         for (var i = 0; i < allBubbleElements.length; i++) {
             allBubbleElements[i].style.webkitTransform = "translate3d(0, 0, 0) rotate(" + (-absoluteRotation) + "deg)";
         }
+        setOffsetOnPanel(absoluteRotation);
+    }
+
+    function setOffsetOnPanel(absoluteRotation) {
         panelElem.style.webkitTransform = "translate3d(-" + getPanelOffsetFromRotation(absoluteRotation) + "px, 0, 0)"
     }
+
 
     function getComputedStyleAngleInDegrees(element) {
         // CREDIT: http://css-tricks.com/get-value-of-css-rotation-through-javascript/
@@ -349,6 +356,7 @@ angular.module('starter.controllers', [])
                 INTERVAL_throwRefresh = setInterval(function() {
                     var instantAngle = getComputedStyleAngleInDegrees(dialElem);
                     highlightClosestBubble(instantAngle);
+                    setOffsetOnPanel(instantAngle);
                 }, 200);
             }
 
@@ -413,6 +421,10 @@ angular.module('starter.controllers', [])
         var topBubbleIndex = getTopBubbleIndex(absoluteRotation);
         var topBubbleAngle = getBubbleAngle(topBubbleIndex);
 
+
+    }
+
+    function refreshPanelDuringThrow(absoluteRotation) {
 
     }
 
