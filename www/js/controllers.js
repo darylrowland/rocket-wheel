@@ -189,16 +189,18 @@ angular.module('starter.controllers', [])
     }
 
     function getPanelOffsetFromRotation(absoluteRotation) {
-        //console.log(absoluteRotation, -( $scope.windowWidth * (absoluteRotation%360)/$scope.stepAngleDegrees ));
-        var rawOffset = -( $scope.windowWidth * (absoluteRotation%360)/$scope.stepAngleDegrees );
+        var rawOffset = ( $scope.windowWidth * (absoluteRotation%360)/$scope.stepAngleDegrees );
 
-        return Math.abs(rawOffset);
+        // console.clear();
+        // console.log( absoluteRotation%360, rawOffset );
 
-        if (rawOffset < 0) {
-            rawOffset = $scope.windowWidth*$scope.navBubbles.length - rawOffset;
+        if (absoluteRotation >= 0) {
+            return ( $scope.windowWidth*$scope.navBubbles.length ) - rawOffset;
+        } else {
+            return -rawOffset;
         }
 
-        return rawOffset;
+
     }
 
 
@@ -215,7 +217,6 @@ angular.module('starter.controllers', [])
     }
 
     function setRotationOnDial(absoluteRotation) {
-        console.log(absoluteRotation);
         dialElem.style.webkitTransform = "translate3d(0, 0, 0) rotate(" + absoluteRotation + "deg)";
         for (var i = 0; i < allBubbleElements.length; i++) {
             allBubbleElements[i].style.webkitTransform = "translate3d(0, 0, 0) rotate(" + (-absoluteRotation) + "deg)";
@@ -237,7 +238,6 @@ angular.module('starter.controllers', [])
 
         // With rotate(30deg)...
         // matrix(0.866025, 0.5, -0.5, 0.866025, 0px, 0px)
-        //console.log('Matrix: ' + tr);
 
         // rotation matrix - http://en.wikipedia.org/wiki/Rotation_matrix
 
@@ -257,7 +257,6 @@ angular.module('starter.controllers', [])
         var angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
 
         // works!
-        //console.log('Rotate: ' + angle + 'deg');
 
         return angle;
     }
@@ -319,7 +318,6 @@ angular.module('starter.controllers', [])
         
         // Simple drag (low velocity)
         if ( currentMode==CURRENT_MODE_DRAG ) {
-            //console.log("simple drag");
             thisRotation = currentRotation + getDeltaAngleFromDeltaX(deltaX);
 
             setStyleOnDial('-webkit-transition', WEBKIT_TRANSITION_DIAL_ROTATE);
@@ -388,7 +386,6 @@ angular.module('starter.controllers', [])
 
     function snapToClosestNotch(absoluteRotation) {
         var closestNotchAngle = getClosestNotchAngle(absoluteRotation);
-        console.log('***', absoluteRotation, closestNotchAngle);
 
         setStyleOnDial('-webkit-transition', WEBKIT_TRANSITION_DIAL_BOUNCE);
         setRotationOnDial(closestNotchAngle);
