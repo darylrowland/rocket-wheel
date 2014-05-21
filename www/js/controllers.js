@@ -108,6 +108,7 @@ angular.module('starter.controllers', [])
     var currentMode = null;
     var lastDeltaX = 0;
     var throwNearEnd = false;
+    var lastPanelOffset = 0;
     
     var allBubbleElements = document.getElementsByClassName("bubble-icon");
 
@@ -196,8 +197,11 @@ angular.module('starter.controllers', [])
         return bubbleIndex * $scope.stepAngleDegrees;
     }
 
-    function getPanelOffsetFromRotation(absoluteRotation, snapToClosestNotch) {
-        if (!snapToClosestNotch) snapToClosestNotch = false;
+    function getPanelOffsetFromRotation(absoluteRotation, snapToClosestNotch, preventPanelWrapping) {
+        if (!snapToClosestNotch) snapToClosestNotch = false;    // When true, return value will corresponding to the snap location (i.e. so panal content in fixed center on display)
+        if (!preventPanelWrapping) preventPanelWrapping = false;          // When true, special case ensures that panel wrapping does not happen when bouncing the first (i.e wrapping) element
+
+        //console.log(absoluteRotation);
 
         var rotationToUse;
         if ( snapToClosestNotch ) {
@@ -211,12 +215,28 @@ angular.module('starter.controllers', [])
 
         var result;
 
-        if (absoluteRotation >= 0) {
+        // Different logic needed for positive vs. negative rotation values
+
+        // Special case check to prevent wrapping when bouncing first element        
+        if (preventPanelWrapping&&lastPanelIndex==0) {
+            result = -rawOffset;
+        } else if (absoluteRotation >= 0) {
             result = ( $scope.windowWidth*$scope.navBubbles.length ) - rawOffset;
         } else {
             result = -rawOffset;
         }
 
+        // // Special case check to prevent wrapping when bouncing first element
+        // if (preventPanelWrapping) {
+        //     // Check if the last rotation was on first element
+        //     if ( lastPanelIndex==0 ) {
+        //         // If so, 
+        //     }
+        // }
+
+
+
+        lastPanelIndex = Math.round(result/$scope.windowWidth);
         return result;
 
     }
@@ -235,16 +255,16 @@ angular.module('starter.controllers', [])
         panelElem.style[property] = value;
     }
 
-    function setRotationOnDial(absoluteRotation) {
+    function setRotationOnDial(absoluteRotation, preventPanelWrapping) {
         dialElem.style.webkitTransform = "translate3d(0, 0, 0) rotate(" + absoluteRotation + "deg)";
         for (var i = 0; i < allBubbleElements.length; i++) {
             allBubbleElements[i].style.webkitTransform = "translate3d(0, 0, 0) rotate(" + (-absoluteRotation) + "deg)";
         }
-        setOffsetOnPanel(absoluteRotation);
+        setOffsetOnPanel(absoluteRotation, false, preventPanelWrapping);
     }
 
-    function setOffsetOnPanel(absoluteRotation, snapToClosestNotch) {
-        panelElem.style.webkitTransform = "translate3d(-" + getPanelOffsetFromRotation(absoluteRotation, snapToClosestNotch) + "px, 0, 0)"
+    function setOffsetOnPanel(absoluteRotation, snapToClosestNotch, preventPanelWrapping) {
+        panelElem.style.webkitTransform = "translate3d(-" + getPanelOffsetFromRotation(absoluteRotation, snapToClosestNotch, preventPanelWrapping) + "px, 0, 0)"
     }
 
 
@@ -299,7 +319,7 @@ angular.module('starter.controllers', [])
         // Override panelElem transition to animate to correct position 
         panelElem.style['-webkit-transition'] = '-webkit-transform 0.1s linear';
 
-        setRotationOnDial(instantAngle);
+        setRotationOnDial(instantAngle, true);  // preventPanelWrapping = true
         currentRotation = instantAngle;
 
         clearInterval(INTERVAL_throwRefresh);
@@ -435,7 +455,8 @@ angular.module('starter.controllers', [])
         var closestNotchAngle = getClosestNotchAngle(absoluteRotation);
 
         setStyleOnDial('-webkit-transition', WEBKIT_TRANSITION_DIAL_BOUNCE);
-        setRotationOnDial(closestNotchAngle);
+
+        setRotationOnDial(closestNotchAngle, true);     // preventPanelWrapping = true
         currentRotation = closestNotchAngle;
     }
 
