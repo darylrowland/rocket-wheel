@@ -22,21 +22,21 @@ angular.module('starter.controllers', [])
     
 
     $scope.navBubbles = [
-        {id: "houseMove", title: "Summary", colour: "RGBA(57, 161, 223, 1)", icon: "ion-ios7-bookmarks-outline"},
-        {id: "houseMove", title: "House", colour: "RGBA(91, 152, 23, 1)", icon: "ion-home"},
-        {id: "houseMove", title: "Save Me", colour: "RGBA(235, 130, 30, 1)", icon: "ion-help-buoy"},
-        {id: "houseMove", title: "Health", colour: "RGBA(80, 120, 177, 1)", icon: "ion-medkit"},
-        {id: "houseMove", title: "Food", colour: "RGBA(201, 47, 10, 1)", icon: "ion-pizza"},
-        {id: "houseMove", title: "House Move 5", colour: "RGBA(96, 197, 91, 1)", icon: "ion-home"},
-        {id: "houseMove", title: "House Move 7", colour: "blue", icon: "ion-home"},
-        {id: "houseMove", title: "House Move 13", colour: "blue", icon: "ion-home"},
-        {id: "houseMove", title: "House Move 14", colour: "blue", icon: "ion-home"},
-        {id: "houseMove", title: "House Move 7", colour: "blue", icon: "ion-home"},
-        {id: "houseMove", title: "House Move 13", colour: "blue", icon: "ion-home"},
-        {id: "houseMove", title: "House Move 14", colour: "blue", icon: "ion-home"},
-        {id: "houseMove", title: "House Move 15", colour: "blue", icon: "ion-beer"},
-        {id: "houseMove", title: "Shopping", colour: "RGBA(185, 50, 117, 1)", icon: "ion-bag"},
-        {id: "houseMove", title: "Travel", colour: "RGBA(143, 49, 171, 1)", icon: "ion-model-s"}
+        {id: "houseMove", title: "Summary", colour: "RGBA(57, 161, 223, 1)", icon: "ion-ios7-bookmarks-outline", image: "summary.png"},
+        {id: "houseMove", title: "House", colour: "RGBA(91, 152, 23, 1)", icon: "ion-home", image: "housemove.png"},
+        {id: "houseMove", title: "Save Me", colour: "RGBA(235, 130, 30, 1)", icon: "ion-help-buoy", image: "savings.png"},
+        {id: "houseMove", title: "Health", colour: "RGBA(80, 120, 177, 1)", icon: "ion-medkit", image: "health.png"},
+        {id: "houseMove", title: "Food", colour: "RGBA(201, 47, 10, 1)", icon: "ion-pizza", image: "food.png"},
+        {id: "houseMove", title: "House Move 5", colour: "RGBA(96, 197, 91, 1)", icon: "ion-home", image: "housemove.png"},
+        {id: "houseMove", title: "House Move 7", colour: "blue", icon: "ion-home", image: "housemove.png"},
+        {id: "houseMove", title: "House Move 13", colour: "blue", icon: "ion-home", image: "housemove.png"},
+        {id: "houseMove", title: "House Move 14", colour: "blue", icon: "ion-home", image: "housemove.png"},
+        {id: "houseMove", title: "House Move 7", colour: "blue", icon: "ion-home", image: "housemove.png"},
+        {id: "houseMove", title: "House Move 13", colour: "blue", icon: "ion-home", image: "housemove.png"},
+        {id: "houseMove", title: "House Move 14", colour: "blue", icon: "ion-home", image: "housemove.png"},
+        {id: "houseMove", title: "House Move 15", colour: "blue", icon: "ion-beer", image: "housemove.png"},
+        {id: "houseMove", title: "Shopping", colour: "RGBA(185, 50, 117, 1)", icon: "ion-bag", image: "shopping.png"},
+        {id: "houseMove", title: "Travel", colour: "RGBA(143, 49, 171, 1)", icon: "ion-model-s", image: "travel.png"}
     ];
 
 
@@ -128,7 +128,7 @@ angular.module('starter.controllers', [])
 
 
     var dialElem = document.getElementById("dialHolder");
-
+    var panelElem = document.getElementById("panelContainer");
   
     /* HELPER FUNCTIONS */
 
@@ -188,14 +188,21 @@ angular.module('starter.controllers', [])
         return bubbleIndex * $scope.stepAngleDegrees;
     }
 
+    function getPanelOffsetFromRotation(absoluteRotation) {
+        return -( $scope.windowWidth * (absoluteRotation%360)/$scope.stepAngleDegrees )
+    }
 
-    // Dial transition and rotation functions
+
+    // Dial transition and rotation functions (inc panel)
 
     function setStyleOnDial(property, value) {
+        // Dial
         dialElem.style[property] = value;
         for (var i = 0; i < allBubbleElements.length; i++) {
             allBubbleElements[i].style[property] = value;
         }
+        // Panels
+        panelElem.style[property] = value;
     }
 
     function setRotationOnDial(absoluteRotation) {
@@ -203,6 +210,7 @@ angular.module('starter.controllers', [])
         for (var i = 0; i < allBubbleElements.length; i++) {
             allBubbleElements[i].style.webkitTransform = "translate3d(0, 0, 0) rotate(" + (-absoluteRotation) + "deg)";
         }
+        panelElem.style.webkitTransform = "translate3d(-" + getPanelOffsetFromRotation(absoluteRotation) + "px, 0, 0)"
     }
 
     function getComputedStyleAngleInDegrees(element) {

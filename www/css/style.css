@@ -65,8 +65,11 @@
     color: #ffffff;
     font-size: 30px;
     text-transform: uppercase;
-    padding-top: 30px;
     font-weight: 100;
+    
+    padding-top: 10px;
+    padding-bottom: 30px;
+
 }
 
 .no-transition {
@@ -88,12 +91,11 @@
 }
 
 .bubble-icon {
-    /*-webkit-transition: all 0.07s ease-in;
-    -webkit-transform: translate3d(0, 0, 0);
-    -webkit-transform: translateZ(0);*/
-    /*transition-timing-function: cubic-bezier(0.5, -0.5, 0.5, 1.1, 1);
-    */
     color: #ffffff;
+}
+.bubble-icon.large {
+    font-size: 50px;
+    font-weight: lighter;
 }
 
 .holder {
@@ -121,4 +123,24 @@
 @-webkit-keyframes moveToMiddle {
     from {left:-200px; top: 20px;}
     to {left:20px; top: 20px;}
+}
+
+
+/* Contains all panels */
+.panel-container {
+    position: absolute;
+    top: 50px;
+    left: 0;
+
+    overflow: hidden;
+}
+
+/* One panel */
+.panel {
+    display: inline-block;      /* Place panels horizontally in container */
+    text-align: center;
+}
+
+.panel img {
+    height: 150px;
 }

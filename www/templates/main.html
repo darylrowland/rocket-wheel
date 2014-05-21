@@ -5,14 +5,23 @@
     </ion-nav-buttons>
     <ion-content class="has-header content-bg" has-bouncing="false" has-scroll="false">
 
+        <!--
         <div class="content-scroller">
             <div class="nav-content" ng-repeat="bubble in navBubbles" style="position: absolute; display: {{contentIsVisible($index)}}; left: {{calcLeftForContent($index)}}px; top: 20px; width: {{windowWidth - 40}}px;">
                 <div class="content-heading">{{bubble.title}}</div>
 
                 <div style="color: white">{{debug}}</div>
                 <div style="color: white">{{currentRotation}}</div>
+            </div>
+        </div>
+        -->
 
-
+        <div class="panel-container" style="width: {{windowWidth*navBubbles.length}}px" id="panelContainer">
+            <div class="panel" ng-repeat="bubble in navBubbles" style="width: {{windowWidth}}px">
+                <div class="content-heading">{{bubble.title}}</div>
+                <div>
+                    <img src="img/panels/{{bubble.image}}">
+                </div>                
             </div>
         </div>
 
