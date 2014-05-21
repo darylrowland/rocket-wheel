@@ -8,10 +8,10 @@ angular.module('starter.controllers', [])
 .controller('MainController', function($scope, $rootScope, $stateParams, $interval, $ionicGesture, $ionicBackdrop, $timeout, $http, $ionicLoading) {
 
     //var VEL_THROW = 10;
-    const THROW_DELTA_DELTAX = 30;    // Threshold for change in DeltaX value at which gesture turns into a throw
+    const THROW_DELTA_DELTAX = 20;    // Threshold for change in DeltaX value at which gesture turns into a throw
 
-    const THROW_ROTATION_COMPONENT_CONSTANT = 50;           // y = mx + C
-    const THROW_ROTATION_COMPONENT_LINEAR_MULTIPLIER = 100;    // y = Mx + c
+    const THROW_ROTATION_COMPONENT_CONSTANT = 30;           // y = mx + C
+    const THROW_ROTATION_COMPONENT_LINEAR_MULTIPLIER = 50;    // y = Mx + c
 
     const WEBKIT_TRANSITION_DIAL_ROTATE = 'none';
     const DIAL_SPIN_DURATION_SECS = 5;  // NB: Must be greater than 1 !!
@@ -24,17 +24,18 @@ angular.module('starter.controllers', [])
     $scope.navBubbles = [
         {id: "houseMove", title: "Summary", colour: "RGBA(57, 161, 223, 1)", icon: "ion-ios7-bookmarks-outline", image: "summary.png"},
         {id: "houseMove", title: "House", colour: "RGBA(91, 152, 23, 1)", icon: "ion-home", image: "housemove.png"},
-        {id: "houseMove", title: "Save Me", colour: "RGBA(235, 130, 30, 1)", icon: "ion-help-buoy", image: "savings.png"},
+        {id: "houseMove", title: "Save Me", colour: "RGBA(235, 130, 30, 1)", icon: "ion-help-buoy", image: "lifebuoy.png"},
         {id: "houseMove", title: "Health", colour: "RGBA(80, 120, 177, 1)", icon: "ion-medkit", image: "health.png"},
         {id: "houseMove", title: "Food", colour: "RGBA(201, 47, 10, 1)", icon: "ion-pizza", image: "food.png"},
         {id: "houseMove", title: "House Move 5", colour: "RGBA(96, 197, 91, 1)", icon: "ion-home", image: "housemove.png"},
         {id: "houseMove", title: "House Move 7", colour: "blue", icon: "ion-home", image: "housemove.png"},
+        // {id: "houseMove", title: "House Move 13", colour: "blue", icon: "ion-home", image: "housemove.png"},
+        // {id: "houseMove", title: "House Move 14", colour: "blue", icon: "ion-home", image: "housemove.png"},
+        // {id: "houseMove", title: "House Move 7", colour: "blue", icon: "ion-home", image: "housemove.png"},
         {id: "houseMove", title: "House Move 13", colour: "blue", icon: "ion-home", image: "housemove.png"},
         {id: "houseMove", title: "House Move 14", colour: "blue", icon: "ion-home", image: "housemove.png"},
-        {id: "houseMove", title: "House Move 7", colour: "blue", icon: "ion-home", image: "housemove.png"},
-        {id: "houseMove", title: "House Move 13", colour: "blue", icon: "ion-home", image: "housemove.png"},
-        {id: "houseMove", title: "House Move 14", colour: "blue", icon: "ion-home", image: "housemove.png"},
-        {id: "houseMove", title: "House Move 15", colour: "blue", icon: "ion-beer", image: "housemove.png"},
+        {id: "houseMove", title: "Savings", colour: "blue", icon: "ion-card", image: "savings.png"},
+        // {id: "houseMove", title: "House Move 15", colour: "blue", icon: "ion-beer", image: "housemove.png"},
         {id: "houseMove", title: "Shopping", colour: "RGBA(185, 50, 117, 1)", icon: "ion-bag", image: "shopping.png"},
         {id: "houseMove", title: "Travel", colour: "RGBA(143, 49, 171, 1)", icon: "ion-model-s", image: "travel.png"}
     ];
