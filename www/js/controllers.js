@@ -108,7 +108,7 @@ angular.module('starter.controllers', [])
     var currentMode = null;
     var lastDeltaX = 0;
     var throwNearEnd = false;
-    var lastPanelOffset = 0;
+    var lastPanelIndex = 0;
     
     var allBubbleElements = document.getElementsByClassName("bubble-icon");
 
