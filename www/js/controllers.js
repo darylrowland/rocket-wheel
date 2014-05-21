@@ -189,7 +189,8 @@ angular.module('starter.controllers', [])
     }
 
     function getPanelOffsetFromRotation(absoluteRotation) {
-        return -( $scope.windowWidth * (absoluteRotation%360)/$scope.stepAngleDegrees )
+        console.log(absoluteRotation, -( $scope.windowWidth * (absoluteRotation%360)/$scope.stepAngleDegrees ));
+        return Math.abs( $scope.windowWidth * (absoluteRotation%360)/$scope.stepAngleDegrees )
     }
 
 
@@ -206,6 +207,7 @@ angular.module('starter.controllers', [])
     }
 
     function setRotationOnDial(absoluteRotation) {
+        console.log(absoluteRotation);
         dialElem.style.webkitTransform = "translate3d(0, 0, 0) rotate(" + absoluteRotation + "deg)";
         for (var i = 0; i < allBubbleElements.length; i++) {
             allBubbleElements[i].style.webkitTransform = "translate3d(0, 0, 0) rotate(" + (-absoluteRotation) + "deg)";
