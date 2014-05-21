@@ -42,6 +42,10 @@ angular.module('starter.controllers', [])
     $scope.navBubblesWithDupFirstEntryAtEnd = angular.copy( $scope.navBubbles );
     $scope.navBubblesWithDupFirstEntryAtEnd.push( $scope.navBubbles[0] );
 
+    $scope.getIfHighlighted = function(index) {
+        console.log($scope.highlightedIndex, index, index % $scope.navBubbles.length);
+        return (index % $scope.navBubbles.length) == $scope.highlightedIndex;
+    }
 
     // Gesture stuff
     var swipeArea = angular.element(document.querySelector('#swipeArea'));
@@ -192,9 +196,6 @@ angular.module('starter.controllers', [])
 
     function getPanelOffsetFromRotation(absoluteRotation) {
         var rawOffset = ( $scope.windowWidth * (absoluteRotation%360)/$scope.stepAngleDegrees );
-
-        // console.clear();
-        // console.log( absoluteRotation%360, rawOffset );
 
         if (absoluteRotation >= 0) {
             return ( $scope.windowWidth*$scope.navBubbles.length ) - rawOffset;

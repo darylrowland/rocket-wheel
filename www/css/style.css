@@ -17,7 +17,7 @@
     opacity: 0.6;
 }
 
-.nav-ball.highlighted-bubble {
+.nav-ball.highlighted {
     -webkit-transform: scale(1.4);
     opacity: 1;
 }
@@ -139,6 +139,12 @@
 .panel {
     display: inline-block;      /* Place panels horizontally in container */
     text-align: center;
+    opacity: 0.3;
+
+    -webkit-transition: opacity 0.3s ease-in;
+}
+.panel.highlighted {
+    opacity: 1;
 }
 
 .panel img {

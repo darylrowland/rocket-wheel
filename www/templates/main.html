@@ -17,7 +17,7 @@
         -->
 
         <div class="panel-container" style="width: {{windowWidth*navBubblesWithDupFirstEntryAtEnd.length}}px" id="panelContainer">
-            <div class="panel" ng-repeat="bubble in navBubblesWithDupFirstEntryAtEnd" style="width: {{windowWidth}}px">
+            <div class="panel" ng-repeat="bubble in navBubblesWithDupFirstEntryAtEnd" ng-class="{'highlighted': getIfHighlighted($index)}" style="width: {{windowWidth}}px">
                 <div class="content-heading">{{bubble.title}}</div>
                 <div>
                     <img src="img/panels/{{bubble.image}}">
@@ -29,7 +29,7 @@
         <div class="bottom-dialer" style="top: {{bottomDialerTop}}px; left: {{bottomDialerLeft}}px; width: {{bottomDialerWidth}}px;">
             <div class="content-bg" scroll="false" id="swipeArea" >
                     <div id="dialHolder" class="holder" style="width: {{dialWidth}}px; height: {{dialWidth}}px; ">
-                        <div class="nav-ball" ng-class="{'highlighted-bubble': $index == highlightedIndex}" ng-repeat="bubble in navBubbles" style="background-color: {{bubble.colour}}; top: {{bubble.top}}; left: {{bubble.left}};">
+                        <div class="nav-ball" ng-class="{'highlighted': getIfHighlighted($index)}" ng-repeat="bubble in navBubbles" style="background-color: {{bubble.colour}}; top: {{bubble.top}}; left: {{bubble.left}};">
                             <!--<span>{{$index}}</span>-->
                             <i class="{{bubble.icon}} bubble-icon reverse-rotate"></i>
                         </div>
