@@ -8,7 +8,7 @@ angular.module('starter.controllers', [])
 .controller('MainController', function($scope, $rootScope, $stateParams, $interval, $ionicGesture, $ionicBackdrop, $timeout, $http, $ionicLoading) {
 
     //var VEL_THROW = 10;
-    const THROW_DELTA_DELTAX = 100;    // Threshold for change in DeltaX value at which gesture turns into a throw
+    const THROW_DELTA_DELTAX = 30;    // Threshold for change in DeltaX value at which gesture turns into a throw
 
     const THROW_ROTATION_COMPONENT_CONSTANT = 50;           // y = mx + C
     const THROW_ROTATION_COMPONENT_LINEAR_MULTIPLIER = 100;    // y = Mx + c
@@ -265,6 +265,8 @@ angular.module('starter.controllers', [])
 
         highlightClosestBubble(currentRotation);
 
+        lastDeltaX = 0;
+
     }
 
     var releaseEvent = function(evt) {
@@ -295,6 +297,7 @@ angular.module('starter.controllers', [])
             // If large, set throw mode
             currentMode = CURRENT_MODE_THROW
         }
+        lastDeltaX = deltaX;
         
         // Simple drag (low velocity)
         if ( currentMode==CURRENT_MODE_DRAG ) {
