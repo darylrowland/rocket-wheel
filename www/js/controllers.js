@@ -14,7 +14,7 @@ angular.module('starter.controllers', [])
     const THROW_ROTATION_COMPONENT_LINEAR_MULTIPLIER = 100;    // y = Mx + c
 
     const WEBKIT_TRANSITION_DIAL_ROTATE = 'none';
-    const DIAL_SPIN_DURATION_SECS = 5;
+    const DIAL_SPIN_DURATION_SECS = 5;  // NB: Must be greater than 1 !!
     const WEBKIT_TRANSITION_DIAL_SPIN = '-webkit-transform ' + parseInt(DIAL_SPIN_DURATION_SECS) + 's cubic-bezier(0.075, 0.82, 0.165, 1)'         // Ease Out Circ
     const WEBKIT_TRANSITION_DIAL_BOUNCE = '-webkit-transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)'   // Ease Out Back
     const CURRENT_MODE_DRAG = 'drag';
@@ -106,11 +106,13 @@ angular.module('starter.controllers', [])
     var thisRotation = 0;
     var currentMode = null;
     var lastDeltaX = 0;
-
+    var throwNearEnd = false;
+    
     var allBubbleElements = document.getElementsByClassName("bubble-icon");
 
     var INTERVAL_throwRefresh = null;
     var TIMEOUT_throwEnd = null;
+    var TIMEOUT_throwNearEnd = null;
 
     $scope.calcLeftForContent = function(index) {
         if (index == $scope.highlightedIndex) {
@@ -193,10 +195,16 @@ angular.module('starter.controllers', [])
         return bubbleIndex * $scope.stepAngleDegrees;
     }
 
-    function getPanelOffsetFromRotation(absoluteRotation) {
+    function getPanelOffsetFromRotation(absoluteRotation, snapToClosestNotch) {
+        if (!snapToClosestNotch) snapToClosestNotch = false;
 
-        // Get notch position (i.e use dial snap posiiton)
-        var rotationToUse = getClosestNotchAngle(absoluteRotation);
+        var rotationToUse;
+        if ( snapToClosestNotch ) {
+            // Get notch position (i.e use dial snap posiiton)
+            rotationToUse = getClosestNotchAngle(absoluteRotation);
+        } else {
+            rotationToUse = absoluteRotation;
+        }
 
         var rawOffset = ( $scope.windowWidth * (rotationToUse%360)/$scope.stepAngleDegrees );
 
@@ -221,10 +229,9 @@ angular.module('starter.controllers', [])
         for (var i = 0; i < allBubbleElements.length; i++) {
             allBubbleElements[i].style[property] = value;
         }
-        /*  Removed - reinstate to scroll panel x position with dial
+
         // Panels
         panelElem.style[property] = value;
-        */
     }
 
     function setRotationOnDial(absoluteRotation) {
@@ -235,8 +242,8 @@ angular.module('starter.controllers', [])
         setOffsetOnPanel(absoluteRotation);
     }
 
-    function setOffsetOnPanel(absoluteRotation) {
-        panelElem.style.webkitTransform = "translate3d(-" + getPanelOffsetFromRotation(absoluteRotation) + "px, 0, 0)"
+    function setOffsetOnPanel(absoluteRotation, snapToClosestNotch) {
+        panelElem.style.webkitTransform = "translate3d(-" + getPanelOffsetFromRotation(absoluteRotation, snapToClosestNotch) + "px, 0, 0)"
     }
 
 
@@ -287,6 +294,10 @@ angular.module('starter.controllers', [])
         // Make sure dial is stopped (use computed style in case we are doing an animation)
         var instantAngle = getComputedStyleAngleInDegrees(dialElem);
         setStyleOnDial('-webkit-transition', 'none');
+        // panelELem will have been fixed position during throw
+        // Override panelElem transition to animate to correct position 
+        panelElem.style['-webkit-transition'] = '-webkit-transform 0.1s linear';
+
         setRotationOnDial(instantAngle);
         currentRotation = instantAngle;
 
@@ -295,6 +306,11 @@ angular.module('starter.controllers', [])
         
         clearTimeout(TIMEOUT_throwEnd);
         TIMEOUT_throwEnd = null;
+
+        clearTimeout(TIMEOUT_throwNearEnd);
+        TIMEOUT_throwNearEnd = null;
+
+        throwNearEnd = false;
 
         highlightClosestBubble(currentRotation);
 
@@ -367,7 +383,7 @@ angular.module('starter.controllers', [])
                     highlightClosestBubble(instantAngle);
                     
                     panelElem.style['-webkit-transition'] = 'linear';
-                    setOffsetOnPanel(instantAngle);
+                    setOffsetOnPanel(instantAngle, !throwNearEnd);      // snapToClosestNotch = true
                 }, 200);
             }
 
@@ -376,11 +392,22 @@ angular.module('starter.controllers', [])
                 TIMEOUT_throwEnd = setTimeout(function() {
                     clearInterval(INTERVAL_throwRefresh);
                     INTERVAL_throwRefresh = null;
+                    throwNearEnd = false;
 
                     highlightClosestBubble(currentRotation);
-                    snapToClosestNotch(currentRotation);
+                    snapToClosestNotch(currentRotation, false); // snapToClosestNotch = false
                 }, DIAL_SPIN_DURATION_SECS*1000);
             }
+
+            /* Remove this for now
+
+            if (!TIMEOUT_throwNearEnd) {
+                TIMEOUT_throwNearEnd = setTimeout(function() {
+                    throwNearEnd = true;
+                }, (DIAL_SPIN_DURATION_SECS-1)*1000);
+            }
+
+            */
 
 
         }
