@@ -189,8 +189,16 @@ angular.module('starter.controllers', [])
     }
 
     function getPanelOffsetFromRotation(absoluteRotation) {
-        console.log(absoluteRotation, -( $scope.windowWidth * (absoluteRotation%360)/$scope.stepAngleDegrees ));
-        return Math.abs( $scope.windowWidth * (absoluteRotation%360)/$scope.stepAngleDegrees )
+        //console.log(absoluteRotation, -( $scope.windowWidth * (absoluteRotation%360)/$scope.stepAngleDegrees ));
+        var rawOffset = -( $scope.windowWidth * (absoluteRotation%360)/$scope.stepAngleDegrees );
+
+        return Math.abs(rawOffset);
+
+        if (rawOffset < 0) {
+            rawOffset = $scope.windowWidth*$scope.navBubbles.length - rawOffset;
+        }
+
+        return rawOffset;
     }
 
 
