@@ -43,7 +43,6 @@ angular.module('starter.controllers', [])
     $scope.navBubblesWithDupFirstEntryAtEnd.push( $scope.navBubbles[0] );
 
     $scope.getIfHighlighted = function(index) {
-        console.log($scope.highlightedIndex, index, index % $scope.navBubbles.length);
         return (index % $scope.navBubbles.length) == $scope.highlightedIndex;
     }
 
