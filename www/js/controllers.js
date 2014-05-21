@@ -195,14 +195,21 @@ angular.module('starter.controllers', [])
     }
 
     function getPanelOffsetFromRotation(absoluteRotation) {
-        var rawOffset = ( $scope.windowWidth * (absoluteRotation%360)/$scope.stepAngleDegrees );
+
+        // Get notch position (i.e use dial snap posiiton)
+        var rotationToUse = getClosestNotchAngle(absoluteRotation);
+
+        var rawOffset = ( $scope.windowWidth * (rotationToUse%360)/$scope.stepAngleDegrees );
+
+        var result;
 
         if (absoluteRotation >= 0) {
-            return ( $scope.windowWidth*$scope.navBubbles.length ) - rawOffset;
+            result = ( $scope.windowWidth*$scope.navBubbles.length ) - rawOffset;
         } else {
-            return -rawOffset;
+            result = -rawOffset;
         }
 
+        return result;
 
     }
 
@@ -215,8 +222,10 @@ angular.module('starter.controllers', [])
         for (var i = 0; i < allBubbleElements.length; i++) {
             allBubbleElements[i].style[property] = value;
         }
+        /*  Removed - reinstate to scroll panel x position with dial
         // Panels
         panelElem.style[property] = value;
+        */
     }
 
     function setRotationOnDial(absoluteRotation) {
@@ -357,6 +366,8 @@ angular.module('starter.controllers', [])
                 INTERVAL_throwRefresh = setInterval(function() {
                     var instantAngle = getComputedStyleAngleInDegrees(dialElem);
                     highlightClosestBubble(instantAngle);
+                    
+                    panelElem.style['-webkit-transition'] = 'linear';
                     setOffsetOnPanel(instantAngle);
                 }, 200);
             }
